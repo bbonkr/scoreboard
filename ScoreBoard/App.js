@@ -6,7 +6,7 @@
  * @flow
  */
 
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -23,58 +23,113 @@ import {
     DebugInstructions,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {
+    Provider,
+    Button,
+    Toast,
+    Drawer,
+    Icon,
+} from '@ant-design/react-native';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
+import RootStack from './components/RootStack';
+import DrawerNavigator from './components/DrawerNavigator';
+
+const AppContainer = createAppContainer(DrawerNavigator);
 
 const App = () => {
-    return (
-        <Fragment>
-            <StatusBar barStyle="dark-content" />
-            <SafeAreaView>
-                <ScrollView
-                    contentInsetAdjustmentBehavior="automatic"
-                    style={styles.scrollView}>
-                    <Header />
-                    {global.HermesInternal == null ? null : (
-                        <View style={styles.engine}>
-                            <Text style={styles.footer}>Engine: Hermes</Text>
-                        </View>
-                    )}
-                    <View style={styles.body}>
-                        <View style={styles.sectionContainer}>
-                            <Text style={styles.sectionTitle}>Step 1</Text>
-                            <Text style={styles.sectionDescription}>
-                                Edit{' '}
-                                <Text style={styles.highlight}>App.js</Text> to
-                                change this screen and then come back to see
-                                your edits.
-                            </Text>
-                        </View>
-                        <View style={styles.sectionContainer}>
-                            <Text style={styles.sectionTitle}>
-                                See Your Changes
-                            </Text>
-                            <Text style={styles.sectionDescription}>
-                                <ReloadInstructions />
-                            </Text>
-                        </View>
-                        <View style={styles.sectionContainer}>
-                            <Text style={styles.sectionTitle}>Debug</Text>
-                            <Text style={styles.sectionDescription}>
-                                <DebugInstructions />
-                            </Text>
-                        </View>
-                        <View style={styles.sectionContainer}>
-                            <Text style={styles.sectionTitle}>Learn More</Text>
-                            <Text style={styles.sectionDescription}>
-                                Read the docs to discover what to do next:
-                            </Text>
-                        </View>
-                        <LearnMoreLinks />
-                    </View>
-                </ScrollView>
-            </SafeAreaView>
-        </Fragment>
-    );
+    return <AppContainer />;
 };
+
+// const App = () => {
+//     const [isMenuOpened, setIsMenuOpened] = useState(false);
+//     const onPressTestButton = () => {
+//         Toast.info('Hello React-native and Ant design.');
+//     };
+
+//     const onPressMenuOpen = () => {
+//         setIsMenuOpened(true);
+//     };
+//     const onOpenChangeMenu = isOpen => {
+//         setIsMenuOpened(isOpen);
+//     };
+//     return (
+//         <Provider>
+//             <Drawer
+//                 sidebar={<Menu />}
+//                 position="left"
+//                 open={isMenuOpened}
+//                 onOpenChange={onOpenChangeMenu}>
+//                 <AppContainer>
+//                     <View>
+//                         <Button onPress={onPressMenuOpen}>
+//                             <Icon name="menu" />
+//                         </Button>
+//                         <Text>ScoreBoard</Text>
+//                     </View>
+//                     <StatusBar barStyle="dark-content" />
+//                     <SafeAreaView>
+//                         <ScrollView
+//                             contentInsetAdjustmentBehavior="automatic"
+//                             style={styles.scrollView}>
+//                             <Header />
+//                             {global.HermesInternal == null ? null : (
+//                                 <View style={styles.engine}>
+//                                     <Text style={styles.footer}>
+//                                         Engine: Hermes
+//                                     </Text>
+//                                 </View>
+//                             )}
+
+//                             <Button onPress={onPressTestButton}>Start</Button>
+
+//                             <View style={styles.body}>
+//                                 <View style={styles.sectionContainer}>
+//                                     <Text style={styles.sectionTitle}>
+//                                         Step 1
+//                                     </Text>
+//                                     <Text style={styles.sectionDescription}>
+//                                         Edit{' '}
+//                                         <Text style={styles.highlight}>
+//                                             App.js
+//                                         </Text>{' '}
+//                                         to change this screen and then come back
+//                                         to see your edits.
+//                                     </Text>
+//                                 </View>
+//                                 <View style={styles.sectionContainer}>
+//                                     <Text style={styles.sectionTitle}>
+//                                         See Your Changes
+//                                     </Text>
+//                                     <Text style={styles.sectionDescription}>
+//                                         <ReloadInstructions />
+//                                     </Text>
+//                                 </View>
+//                                 <View style={styles.sectionContainer}>
+//                                     <Text style={styles.sectionTitle}>
+//                                         Debug
+//                                     </Text>
+//                                     <Text style={styles.sectionDescription}>
+//                                         <DebugInstructions />
+//                                     </Text>
+//                                 </View>
+//                                 <View style={styles.sectionContainer}>
+//                                     <Text style={styles.sectionTitle}>
+//                                         Learn More
+//                                     </Text>
+//                                     <Text style={styles.sectionDescription}>
+//                                         Read the docs to discover what to do
+//                                         next:
+//                                     </Text>
+//                                 </View>
+//                                 <LearnMoreLinks />
+//                             </View>
+//                         </ScrollView>
+//                     </SafeAreaView>
+//                 </AppContainer>
+//             </Drawer>
+//         </Provider>
+//     );
+// };
 
 const styles = StyleSheet.create({
     scrollView: {
