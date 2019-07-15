@@ -1,0 +1,3 @@
+export const LOAD_GAMES_CALL = 'LOAD_GAMES_CALL';
+export const LOAD_GAMES_DONE = 'LOAD_GAMES_DONE';
+export const LOAD_GAMES_FAIL = 'LOAD_GAMES_FAIL';

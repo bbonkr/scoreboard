@@ -23,21 +23,25 @@ import {
     DebugInstructions,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import {
-    Provider,
-    Button,
-    Toast,
-    Drawer,
-    Icon,
-} from '@ant-design/react-native';
+import { Provider as AntDesignProvider } from '@ant-design/react-native';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import RootStack from './components/RootStack';
 import DrawerNavigator from './components/DrawerNavigator';
+import { Provider } from 'react-redux';
+import configureStore from './reducers';
 
 const AppContainer = createAppContainer(DrawerNavigator);
 
+const store = configureStore();
+
 const App = () => {
-    return <AppContainer />;
+    return (
+        <Provider store={store}>
+            <AntDesignProvider>
+                <AppContainer />
+            </AntDesignProvider>
+        </Provider>
+    );
 };
 
 // const App = () => {

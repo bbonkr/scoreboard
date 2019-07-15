@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useCallback } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -8,8 +8,9 @@ import {
     StatusBar,
     Button,
 } from 'react-native';
-
-import { List, Toast } from '@ant-design/react-native';
+import { useSelector, useDispatch, useStore } from 'react-redux';
+import { List, Toast, Button as AntdButton } from '@ant-design/react-native';
+import { LOAD_GAMES_CALL } from '../actions/game';
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -17,9 +18,34 @@ const styles = StyleSheet.create({
 });
 
 const MainView = () => {
+    const dispatch = useDispatch();
+    const store = useStore();
+    const { test, loading } = useSelector(s => s.game);
+    const onPressTestButton = useCallback(() => {
+        console.log('Press Test Button');
+        Toast.show('Press Test Button');
+        // store.dispatch({
+        //     type: LOAD_GAMES_CALL,
+        //     data: {
+        //         test: 'Hey! Redux is working.',
+        //     },
+        // });
+        dispatch({
+            type: LOAD_GAMES_CALL,
+            data: {
+                test: 'Hey! Redux is working.',
+            },
+        });
+    }, [test]);
+
     return (
         <SafeAreaView>
             <Text>MainView</Text>
+            <Text>{test}</Text>
+            {/* <Button onPress={onPressTestButton} title="Test Redux" /> */}
+            <AntdButton onPress={onPressTestButton} loading={loading}>
+                Test Redux
+            </AntdButton>
         </SafeAreaView>
     );
 };
