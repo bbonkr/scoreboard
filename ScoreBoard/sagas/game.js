@@ -8,7 +8,8 @@ import {
     actionChannel,
     throttle,
 } from 'redux-saga/effects';
-import { gameRepository } from '../services/gameRepository';
+// import { gameRepository } from '../services/gameRepository';
+import { gameRepository } from '../services/gameRepoitory-realm';
 import {
     LOAD_GAMES_CALL,
     LOAD_GAMES_FAIL,
@@ -41,22 +42,38 @@ function* watchInitDatabase() {
     yield takeLatest(INIT_DB_CALL, initDatabase);
 }
 
-function loadGamesApi(data) {
+async function loadGamesApi(data) {
     // throw new Error('Exception in Saga');
-    return new Promise(function(resolve, reject) {
-        setTimeout(() => {
-            resolve({
-                test: `${data.test} and OK! Redux-saga is working.`,
-            });
-        }, 1000);
-    });
+    // return new Promise(function(resolve, reject) {
+    //     setTimeout(() => {
+    //         resolve({
+    //             test: `${data.test} and OK! Redux-saga is working.`,
+    //         });
+    //     }, 1000);
+    // });
+    const { pageToken, pageSize } = data;
+
+    const c = await gameRepository().getGames(pageToken, pageSize);
+    if (c.length === 0) {
+        await gameRepository().addItem({
+            title: 'Seed Item',
+            teamAName: 'Team AAA',
+            teamAColor: 'red',
+            teamBName: 'Team BBB',
+            teamBColor: 'blud',
+        });
+    }
+
+    return await gameRepository().getGames(pageToken, pageSize);
 }
 function* loadGames(action) {
     try {
+        const { pageToken, pageSize } = action.data;
         const result = yield call(loadGamesApi, action.data);
         yield put({
             type: LOAD_GAMES_DONE,
             data: result,
+            pageSize: pageSize,
         });
     } catch (e) {
         console.error(e);

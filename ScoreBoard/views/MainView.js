@@ -21,6 +21,8 @@ const MainView = () => {
     const dispatch = useDispatch();
     const store = useStore();
     const { test, loading } = useSelector(s => s.game);
+    const { games, gamesLoading } = useSelector(s => s.game);
+
     const onPressTestButton = useCallback(() => {
         console.log('Press Test Button');
         Toast.show('Press Test Button');
@@ -33,15 +35,17 @@ const MainView = () => {
         dispatch({
             type: LOAD_GAMES_CALL,
             data: {
-                test: 'Hey! Redux is working.',
+                pageToken: 0,
+                pageSize: 10,
             },
         });
-    }, [test]);
+    }, []);
 
     return (
         <SafeAreaView>
             <Text>MainView</Text>
             <Text>{test}</Text>
+            <Text>{games.length}</Text>
             {/* <Button onPress={onPressTestButton} title="Test Redux" /> */}
             <AntdButton onPress={onPressTestButton} loading={loading}>
                 Test Redux

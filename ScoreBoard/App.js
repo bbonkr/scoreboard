@@ -51,7 +51,8 @@ const App = () => {
     return (
         <Provider store={store}>
             <AntDesignProvider>
-                {splash ? <Splash onPrepare={onPrepare} /> : <AppContainer />}
+                {/* {splash ? <Splash onPrepare={onPrepare} /> : <AppContainer />} */}
+                <AppContainer />
             </AntDesignProvider>
         </Provider>
     );

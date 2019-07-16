@@ -13,6 +13,11 @@ const initialState = {
 
     test: 'Hello Redux!',
     loading: false,
+
+    games: [],
+    gamesLoading: false,
+    gamesErrorMessage: '',
+    gamesHasMore: false,
 };
 
 const reducer = (state = initialState, action) =>
@@ -30,14 +35,20 @@ const reducer = (state = initialState, action) =>
             case LOAD_GAMES_CALL:
                 // console.log('data', action.data);
                 // draft.test = action.data.test;
-                draft.loading = true;
+                // draft.loading = true;
+                draft.gamesLoading = true;
                 break;
             case LOAD_GAMES_DONE:
-                draft.test = action.data.test;
-                draft.loading = false;
+                // draft.test = action.data.test;
+                // draft.loading = false;
+                draft.games = action.data;
+                draft.gamesHasMore = action.data.length === action.pageSize;
+                draft.gamesLoading = false;
                 break;
             case LOAD_GAMES_FAIL:
-                draft.loading = false;
+                // draft.loading = false;
+
+                draft.gamesLoading = false;
                 break;
             default:
                 break;
