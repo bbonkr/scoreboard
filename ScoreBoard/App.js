@@ -6,7 +6,7 @@
  * @flow
  */
 
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -29,16 +29,29 @@ import RootStack from './components/RootStack';
 import DrawerNavigator from './components/DrawerNavigator';
 import { Provider } from 'react-redux';
 import configureStore from './reducers';
+import Splash from './views/Splash';
 
 const AppContainer = createAppContainer(DrawerNavigator);
 
 const store = configureStore();
 
 const App = () => {
+    const [splash, setSplash] = useState(true);
+    let timeout;
+    // useEffect(() => {
+    //     timeout = setTimeout(() => {
+    //         setSplash(false);
+    //     }, 3000);
+    // }, [splash]);
+
+    const onPrepare = () => {
+        setSplash(false);
+    };
+
     return (
         <Provider store={store}>
             <AntDesignProvider>
-                <AppContainer />
+                {splash ? <Splash onPrepare={onPrepare} /> : <AppContainer />}
             </AntDesignProvider>
         </Provider>
     );
