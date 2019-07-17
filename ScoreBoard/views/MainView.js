@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback } from 'react';
+import React, { Fragment, useCallback, useEffect } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -6,56 +6,100 @@ import {
     View,
     Text,
     StatusBar,
-    Button,
+    FlatList,
 } from 'react-native';
 import { useSelector, useDispatch, useStore } from 'react-redux';
-import { List, Toast, Button as AntdButton } from '@ant-design/react-native';
+import {
+    List,
+    Toast,
+    Button,
+    ActivityIndicator,
+} from '@ant-design/react-native';
 import { LOAD_GAMES_CALL } from '../actions/game';
+
+const PAGE_SIZE = 10;
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
 });
 
-const MainView = () => {
+const MainView = ({ navigation }) => {
     const dispatch = useDispatch();
-    const store = useStore();
+
     const { test, loading } = useSelector(s => s.game);
     const { games, gamesLoading } = useSelector(s => s.game);
 
-    const onPressTestButton = useCallback(() => {
-        console.log('Press Test Button');
-        Toast.show('Press Test Button');
-        // store.dispatch({
-        //     type: LOAD_GAMES_CALL,
-        //     data: {
-        //         test: 'Hey! Redux is working.',
-        //     },
-        // });
+    useEffect(() => {
         dispatch({
             type: LOAD_GAMES_CALL,
             data: {
                 pageToken: 0,
-                pageSize: 10,
+                pageSize: PAGE_SIZE,
             },
         });
     }, []);
 
+    const onPressTestButton = useCallback(() => {
+        console.log('Press Test Button');
+        Toast.show('Press Test Button');
+        dispatch({
+            type: LOAD_GAMES_CALL,
+            data: {
+                pageToken: 0,
+                pageSize: PAGE_SIZE,
+            },
+        });
+    }, []);
+
+    const onRefleshList = () => {
+        dispatch({
+            type: LOAD_GAMES_CALL,
+            data: {
+                pageToken: 0,
+                pageSize: PAGE_SIZE,
+            },
+        });
+    };
+
     return (
-        <SafeAreaView>
-            <Text>MainView</Text>
-            <Text>{test}</Text>
-            <Text>{games.length}</Text>
-            {/* <Button onPress={onPressTestButton} title="Test Redux" /> */}
-            <AntdButton onPress={onPressTestButton} loading={loading}>
-                Test Redux
-            </AntdButton>
+        <SafeAreaView style={{ flex: 1 }}>
+            <View style={{ flex: 1 }}>
+                <ActivityIndicator animating={gamesLoading} />
+                <Button onPress={onPressTestButton} loading={loading}>
+                    <Text>Reload</Text>
+                </Button>
+                <FlatList
+                    data={games}
+                    renderItem={({ item }) => (
+                        <View key={item.id}>
+                            <Text>{item.title}</Text>
+                            <Text>{item.teamAName}</Text>
+                            <Text>{item.teamBName}</Text>
+                        </View>
+                    )}
+                    refreshing={gamesLoading}
+                    onRefresh={onRefleshList}
+                />
+            </View>
         </SafeAreaView>
     );
 };
 
-MainView.navigationOptions = {
-    drawerLabel: 'Home',
+MainView.navigationOptions = ({ navigation }) => {
+    return {
+        drawerLabel: 'Home',
+        headerRight: (
+            <Text
+                style={{ marginRight: 5 }}
+                onPress={() => {
+                    navigation.navigate('Edit');
+                }}>
+                Add
+            </Text>
+        ),
+    };
 };
 
 export default MainView;
