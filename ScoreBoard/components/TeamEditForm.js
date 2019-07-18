@@ -1,5 +1,17 @@
 import React, { useState, useCallback, useEffect } from 'react';
-
+import {
+    SafeAreaView,
+    TouchableOpacity,
+    StyleSheet,
+    ScrollView,
+    View,
+    Text,
+    StatusBar,
+    FlatList,
+    TextInput,
+    Picker,
+    Button,
+} from 'react-native';
 const colors = [
     { value: 'red', label: 'Red' },
     { value: 'blue', label: 'Blue' },
@@ -24,22 +36,25 @@ const TeamEditForm = ({
             setColor('');
             setColorLabel('');
         } else {
-            const arr = colors.filter(v => v.value === itemValue);
+            const arr = colors.filter(v => v.value === color);
             if (arr && arr.length > 0) {
                 setColorLabel(arr[0].label);
             }
-            setColor(itemValue);
+            setColor(color);
         }
     };
 
     useEffect(() => {
-        if (!!teamName) {
-            setName(teamName);
-        }
-        if (!!teamColor) {
-            onColorChanged(itemValue);
-        }
-    }, []);
+        // if (!!teamName) {
+        //     setName(teamName);
+        // }
+        // if (!!teamColor) {
+        //     onColorChanged(teamColor);
+        // }
+
+        setName(teamName);
+        onColorChanged(teamColor);
+    }, [teamName, teamColor]);
 
     const onChangeName = useCallback(text => {
         setName(text);
@@ -84,7 +99,7 @@ const TeamEditForm = ({
                                 heigth: 40,
                                 paddingTop: 6,
                                 paddingBottom: 6,
-                                backgroundColor: teamAColor,
+                                backgroundColor: color,
                             }}
                             onPress={onPressShowColorPicker}>
                             <Text>{colorLabel || "Select a team's color"}</Text>

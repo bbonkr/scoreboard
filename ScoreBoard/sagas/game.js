@@ -17,6 +17,9 @@ import {
     INIT_DB_CALL,
     INIT_DB_FAIL,
     INIT_DB_DONE,
+    SAVE_GAME_CALL,
+    SAVE_GAME_FAIL,
+    SAVE_GAME_DONE,
 } from '../actions/game';
 
 function initDatabaseApi() {
@@ -88,6 +91,45 @@ function* watchLoadGames() {
     yield takeLatest(LOAD_GAMES_CALL, loadGames);
 }
 
+function saveGameApi(game) {
+    if (!game) {
+        return null;
+    }
+    let addedOrUpdatedObject = {};
+    if (!!game.id) {
+        // update
+        addedOrUpdatedObject = gameRepository().updateItem(game);
+    } else {
+        // insert
+        addedOrUpdatedObject = gameRepository().addItem(game);
+    }
+
+    return addedOrUpdatedObject;
+}
+
+function* saveGame(action) {
+    try {
+        const result = yield call(saveGameApi, action.data);
+        yield put({
+            type: SAVE_GAME_DONE,
+            data: result,
+        });
+    } catch (error) {
+        yield put({
+            type: SAVE_GAME_FAIL,
+            error: error,
+            reason: error.ToString(),
+        });
+    }
+}
+function* watchSaveGame() {
+    yield takeLatest(SAVE_GAME_CALL, saveGame);
+}
+
 export default function* gameSage() {
-    yield all([fork(watchInitDatabase), fork(watchLoadGames)]);
+    yield all([
+        fork(watchInitDatabase),
+        fork(watchLoadGames),
+        fork(watchSaveGame),
+    ]);
 }

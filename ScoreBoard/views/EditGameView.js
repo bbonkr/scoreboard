@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import {
     SafeAreaView,
     TouchableOpacity,
@@ -12,103 +13,135 @@ import {
     Picker,
     Button,
 } from 'react-native';
+import TeamEditForm from '../components/TeamEditForm';
+import {
+    SAVE_GAME_CALL,
+    SELECT_GAME,
+    NEW_GAME,
+    DESELECT_GAME,
+} from '../actions/game';
 
-const EditGameView = () => {
+const EditGameView = ({ navigation }) => {
+    const dispatch = useDispatch();
+    const { game, gameSaving, gameSaveError, gameSaveCompleted } = useSelector(
+        s => s.game,
+    );
+
+    const [title, setTitle] = useState('');
     const [teamAName, setTeamAName] = useState('');
     const [teamAColor, setTeamAColor] = useState('');
-    const [teamAColorLabel, setTeamAColorLabel] = useState('');
-    const [showTeamAColorPicker, setShowTeamAColorPicker] = useState(false);
 
-    const colors = [
-        { value: 'red', label: 'Red' },
-        { value: 'blue', label: 'Blue' },
-        { value: 'yellow', label: 'Yellow' },
-        { value: 'white', label: 'White' },
-        { value: 'green', label: 'Green' },
-    ];
+    const [teamBName, setTeamBName] = useState('');
+    const [teamBColor, setTeamBColor] = useState('');
+
+    useEffect(() => {
+        const selectedGame = navigation.getParam('selectedGame', null);
+        if (!!selectedGame) {
+            dispatch({ type: SELECT_GAME, data: JSON.parse(selectedGame) });
+        } else {
+            dispatch({ type: NEW_GAME });
+        }
+    }, []);
+
+    useEffect(() => {
+        if (game) {
+            setTitle(game.title);
+            setTeamAName(game.teamAName);
+            setTeamAColor(game.teamAColor);
+            setTeamBName(game.teamBName);
+            setTeamBColor(game.teamBColor);
+        } else {
+            setTitle('');
+            setTeamAName('');
+            setTeamAColor('');
+            setTeamBName('');
+            setTeamBColor('');
+        }
+    }, [game]);
+
+    useEffect(() => {
+        if (gameSaveCompleted) {
+            dispatch({
+                type: DESELECT_GAME,
+            });
+            navigation.goBack();
+        }
+    }, [gameSaveCompleted]);
+
+    const onChangeTitle = useCallback(text => {
+        setTitle(text);
+    }, []);
     const onChangeTeamAName = useCallback(text => {
         setTeamAName(text);
     }, []);
 
-    const onValueChangeTeamAColor = useCallback((itemValue, itemIndex) => {
-        const arr = colors.filter(v => v.value === itemValue);
-        if (arr && arr.length > 0) {
-            setTeamAColorLabel(arr[0].label);
-        }
-        setTeamAColor(itemValue);
-
-        setShowTeamAColorPicker(false);
+    const onChangeTeamAColor = useCallback(value => {
+        setTeamAColor(value);
     }, []);
 
-    const onPressCancelPickerTeamAColor = useCallback(() => {
-        setShowTeamAColorPicker(false);
+    const onChangeTeamBName = useCallback(text => {
+        setTeamBName(text);
     }, []);
 
-    const onPressShowTeamAColorPicker = useCallback(() => {
-        setShowTeamAColorPicker(true);
+    const onChangeTeamBColor = useCallback(value => {
+        setTeamBColor(value);
     }, []);
+
+    const onPressSave = useCallback(() => {
+        const saveData = {};
+
+        saveData.id = !!game ? game.id : 0;
+        saveData.title = title;
+        saveData.teamAName = teamAName;
+        saveData.teamAColor = teamAColor;
+        saveData.teamBName = teamBName;
+        saveData.teamBColor = teamBColor;
+        saveData.isClosed = false;
+
+        dispatch({
+            type: SAVE_GAME_CALL,
+            data: saveData,
+        });
+    }, [
+        game,
+        game && game.id,
+        title,
+        teamAName,
+        teamAColor,
+        teamBName,
+        teamBColor,
+    ]);
 
     return (
         <SafeAreaView>
             <View style={{ padding: 15 }}>
-                <Text>Team A</Text>
-                <Text>Name</Text>
+                <Text>Title</Text>
                 <TextInput
                     style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                    onChangeText={onChangeTeamAName}
-                    value={teamAName}
+                    onChangeText={onChangeTitle}
+                    value={title}
                     maxLength={20}
-                    placeholder="Input a team name."
+                    placeholder="Input a game title."
                     returnKeyType="next"
                 />
-                <Text>Color</Text>
-                <View>
-                    <View>
-                        {!showTeamAColorPicker && (
-                            <TouchableOpacity
-                                style={{
-                                    heigth: 40,
-                                    paddingTop: 6,
-                                    paddingBottom: 6,
-                                    backgroundColor: teamAColor,
-                                }}
-                                onPress={onPressShowTeamAColorPicker}>
-                                <Text>
-                                    {teamAColorLabel || "Select a team's color"}
-                                </Text>
-                            </TouchableOpacity>
-                        )}
-
-                        {showTeamAColorPicker && (
-                            <View>
-                                <View>
-                                    <Text>Select color.</Text>
-                                    <Button
-                                        onPress={onPressCancelPickerTeamAColor}
-                                        title="Cancel"
-                                    />
-                                </View>
-                                <Picker
-                                    selectedValue={teamAColor}
-                                    style={{ heigth: 50 }}
-                                    onValueChange={onValueChangeTeamAColor}>
-                                    {colors.map(v => {
-                                        return (
-                                            <Picker.Item
-                                                style={{
-                                                    backgroundColor: v.value,
-                                                }}
-                                                key={v.value}
-                                                value={v.value}
-                                                label={v.label}
-                                            />
-                                        );
-                                    })}
-                                </Picker>
-                            </View>
-                        )}
-                    </View>
-                </View>
+                <View style={{ height: 15 }} />
+                <Text>Team A</Text>
+                <TeamEditForm
+                    teamName={teamAName}
+                    teamColor={teamAColor}
+                    onChangeTeamName={onChangeTeamAName}
+                    onChangeTeamColor={onChangeTeamAColor}
+                />
+                <View style={{ height: 15 }} />
+                <Text>Team B</Text>
+                <TeamEditForm
+                    teamName={teamBName}
+                    teamColor={teamBColor}
+                    onChangeTeamName={onChangeTeamBName}
+                    onChangeTeamColor={onChangeTeamBColor}
+                />
+                <Button onPress={onPressSave} title="Save" />
+                <Text>{JSON.stringify(game)}</Text>
             </View>
         </SafeAreaView>
     );

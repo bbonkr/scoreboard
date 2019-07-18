@@ -89,10 +89,10 @@ export const gameRepository = () => {
         async addItem(game) {
             const realm = await open();
             const maxId = realm.objects('Game').max('id');
-
+            let obj = {};
             try {
                 realm.write(() => {
-                    realm.create('Game', {
+                    obj = realm.create('Game', {
                         ...game,
                         id: (maxId || 0) + 1,
                         createdAt: +new Date(),
@@ -102,17 +102,19 @@ export const gameRepository = () => {
                 console.error(e);
                 throw e;
             }
+            return obj;
         },
         async updateItem(game) {
             const realm = await open();
+            let obj = {};
             try {
                 realm.write(() => {
-                    realm.create(
+                    obj = realm.create(
                         'Game',
                         {
                             ...game,
                             updatedAt: +new Date(),
-                            closedAt: isClosed ? +new Date() : null,
+                            closedAt: game.isClosed ? +new Date() : null,
                         },
                         true,
                     );
@@ -121,6 +123,7 @@ export const gameRepository = () => {
                 console.error(e);
                 throw e;
             }
+            return obj;
         },
 
         async deleteItem(game) {
