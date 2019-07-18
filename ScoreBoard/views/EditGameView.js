@@ -63,14 +63,21 @@ const EditGameView = () => {
                 />
                 <Text>Color</Text>
                 <View>
-                    <View style={{ height: 40 }}>
-                        <TouchableOpacity
-                            style={{ heigth: 40, backgroundColor: teamAColor }}
-                            onPress={onPressShowTeamAColorPicker}>
-                            <Text>
-                                {teamAColorLabel || "Select a team's color"}
-                            </Text>
-                        </TouchableOpacity>
+                    <View>
+                        {!showTeamAColorPicker && (
+                            <TouchableOpacity
+                                style={{
+                                    heigth: 40,
+                                    paddingTop: 6,
+                                    paddingBottom: 6,
+                                    backgroundColor: teamAColor,
+                                }}
+                                onPress={onPressShowTeamAColorPicker}>
+                                <Text>
+                                    {teamAColorLabel || "Select a team's color"}
+                                </Text>
+                            </TouchableOpacity>
+                        )}
 
                         {showTeamAColorPicker && (
                             <View>
