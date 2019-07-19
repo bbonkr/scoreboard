@@ -86,6 +86,7 @@ export const gameRepository = () => {
                 .filtered('createdAt > $0 AND isDeleted != true', pageToken)
                 .sorted('createdAt', true);
         },
+
         async addItem(game) {
             const realm = await open();
             const maxId = realm.objects('Game').max('id');
@@ -112,9 +113,16 @@ export const gameRepository = () => {
                     obj = realm.create(
                         'Game',
                         {
-                            ...game,
+                            id: game.id,
+                            title: game.title,
+                            teamAName: game.teamAName,
+                            teamAColor: game.teamAColor,
+                            teamBName: game.teamBName,
+                            teamBColor: game.teamBColor,
+                            isClosed: game.isClosed,
+                            closedAt:
+                                game.isClosed || false ? +new Date() : null,
                             updatedAt: +new Date(),
-                            closedAt: game.isClosed ? +new Date() : null,
                         },
                         true,
                     );
@@ -128,19 +136,52 @@ export const gameRepository = () => {
 
         async deleteItem(game) {
             const realm = await open();
+            let obj = {};
             try {
                 realm.write(() => {
                     // realm.delete(game);
-                    realm.create('Game', {
-                        ...game,
-                        isDeleted: true,
-                        deletedAt: +new Date(),
-                    });
+
+                    obj = realm.create(
+                        'Game',
+                        {
+                            // ...game,
+                            id: game.id,
+                            isDeleted: true,
+                            deletedAt: +new Date(),
+                        },
+                        true,
+                    );
                 });
             } catch (e) {
                 console.error(e);
                 throw e;
             }
+
+            return obj;
+        },
+
+        async updateScore(game) {
+            const realm = await open();
+            let obj = {};
+            try {
+                realm.write(() => {
+                    obj = realm.create(
+                        'Game',
+                        {
+                            id: game.id,
+                            teamAScore: game.teamAScore,
+                            teamBScore: game.teamBScore,
+                            updatedAt: +new Date(),
+                        },
+                        true,
+                    );
+                });
+            } catch (error) {
+                console.error(error);
+                throw error;
+            }
+
+            return obj;
         },
     };
 };

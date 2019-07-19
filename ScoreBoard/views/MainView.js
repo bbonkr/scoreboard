@@ -10,16 +10,19 @@ import {
     FlatList,
     ListView,
     Alert,
+    ActivityIndicator,
+    Button,
 } from 'react-native';
 import { useSelector, useDispatch, useStore } from 'react-redux';
-import {
-    List,
-    Toast,
-    Button,
-    ActivityIndicator,
-} from '@ant-design/react-native';
+// import { Button } from 'react-native-elements';
 import Swipeout from 'react-native-swipeout';
-import { LOAD_GAMES_CALL, NEW_GAME, SELECT_GAME } from '../actions/game';
+import {
+    LOAD_GAMES_CALL,
+    NEW_GAME,
+    SELECT_GAME,
+    DELETE_GAME_CALL,
+} from '../actions/game';
+import TeamCard from '../components/TeamCard';
 
 const PAGE_SIZE = 10;
 
@@ -33,10 +36,14 @@ const MainView = ({ navigation }) => {
     const dispatch = useDispatch();
 
     const { test, loading } = useSelector(s => s.game);
-    const { games, gamesLoading } = useSelector(s => s.game);
+    const { games, gamesLoading, gamesHasMore } = useSelector(s => s.game);
 
     const [sectionId, setSectionId] = useState(null);
     const [rowId, setRowId] = useState(null);
+
+    navigation.addListener('didFocus', () => {
+        dispatch({ type: NEW_GAME });
+    });
 
     useEffect(() => {
         dispatch({
@@ -50,7 +57,7 @@ const MainView = ({ navigation }) => {
 
     const onPressTestButton = useCallback(() => {
         console.log('Press Test Button');
-        Toast.show('Press Test Button');
+
         dispatch({
             type: LOAD_GAMES_CALL,
             data: {
@@ -73,25 +80,68 @@ const MainView = ({ navigation }) => {
     const onPressEdit = useCallback(
         item => () => {
             setRowId(item.id);
+
+            dispatch({ type: SELECT_GAME, data: item });
+
             navigation.navigate('Edit', { selectedGame: JSON.stringify(item) });
         },
         [],
     );
+
+    const onPressLoadMore = useCallback(() => {
+        if (gamesHasMore)
+            if (!!games && games.length > 1) {
+                const pageToken = games[games.length - 1].createdAt;
+
+                dispatch({
+                    type: LOAD_GAMES_CALL,
+                    data: {
+                        pageToken: pageToken,
+                        pageSize: PAGE_SIZE,
+                    },
+                });
+            }
+    }, [games]);
+
+    const onPressDelete = useCallback(
+        item => () => {
+            setRowId(item.id);
+            Alert.alert(
+                'Delete a game',
+                'Do you want to this game',
+                [
+                    { text: 'Cancel', style: 'cancel', onPress: () => {} },
+                    {
+                        text: 'Delete',
+                        style: '',
+                        onPress: () => {
+                            dispatch({
+                                type: DELETE_GAME_CALL,
+                                data: item,
+                            });
+                        },
+                    },
+                ],
+                { cancelable: false },
+            );
+        },
+        [],
+    );
+
     const onPressGame = useCallback(
         item => () => {
-            // dispatch({ type: SELECT_GAME, data: item });
-            // navigation.navigate('Edit', { selectedGame: JSON.stringify(item) });
+            setRowId(item.id);
+
+            dispatch({ type: SELECT_GAME, data: item });
+
+            navigation.navigate('Game', { id: item.id, title: item.title });
         },
         [],
     );
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
             <View style={{ flex: 1 }}>
-                <ActivityIndicator animating={gamesLoading} />
-                <Button onPress={onPressTestButton} loading={loading}>
-                    <Text>Reload</Text>
-                </Button>
                 <FlatList
                     useFlatList={true}
                     data={games}
@@ -102,10 +152,7 @@ const MainView = ({ navigation }) => {
                                 type: 'delete',
                                 backgroundColor: 'red',
                                 underlayColor: 'rgba(0,0,0,0.6)',
-                                onPress: () => {
-                                    setRowId(item.id);
-                                    Alert.alert(`delete ${item.id}`);
-                                },
+                                onPress: onPressDelete(item),
                             },
                             {
                                 text: 'Edit',
@@ -129,9 +176,43 @@ const MainView = ({ navigation }) => {
                                     style={{ backgroundColor: 'white' }}>
                                     <TouchableOpacity
                                         onPress={onPressGame(item)}>
-                                        <Text>{item.title}</Text>
-                                        <Text>{item.teamAName}</Text>
-                                        <Text>{item.teamBName}</Text>
+                                        <Text
+                                            numberOfLines={1}
+                                            ellipsizeMode="tail"
+                                            style={{
+                                                padding: 3,
+                                                fontSize: 24,
+                                                fontWeight: 'bold',
+                                            }}>
+                                            {item.title}
+                                        </Text>
+                                        <View
+                                            style={{
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                justifyContent: 'flex-start',
+                                                padding: 3,
+                                            }}>
+                                            <TeamCard
+                                                name={item.teamAName}
+                                                color={item.teamAColor}
+                                                score={item.teamAScore}
+                                            />
+
+                                            <View
+                                                style={{
+                                                    height: 50,
+                                                    padding: 16,
+                                                }}>
+                                                <Text>VS</Text>
+                                            </View>
+
+                                            <TeamCard
+                                                name={item.teamBName}
+                                                color={item.teamBColor}
+                                                score={item.teamBScore}
+                                            />
+                                        </View>
                                     </TouchableOpacity>
                                 </View>
                             </Swipeout>
@@ -148,6 +229,17 @@ const MainView = ({ navigation }) => {
                             />
                         );
                     }}
+                    ListFooterComponent={() =>
+                        gamesHasMore && (
+                            <View>
+                                <Button
+                                    title="Load more"
+                                    onPress={onPressLoadMore}
+                                />
+                            </View>
+                        )
+                    }
+                    keyExtractor={(item, index) => `${item.id}`}
                     refreshing={gamesLoading}
                     onRefresh={onRefleshList}
                 />
@@ -158,12 +250,13 @@ const MainView = ({ navigation }) => {
 
 MainView.navigationOptions = ({ navigation }) => {
     return {
-        drawerLabel: 'Home',
+        drawerLabel: 'Games',
+        title: 'Games',
         headerRight: (
             <Text
                 style={{ marginRight: 5 }}
                 onPress={() => {
-                    navigation.navigate('Edit');
+                    navigation.navigate('Edit', { id: null });
                 }}>
                 Add
             </Text>

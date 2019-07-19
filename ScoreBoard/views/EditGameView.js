@@ -12,6 +12,7 @@ import {
     TextInput,
     Picker,
     Button,
+    Switch,
 } from 'react-native';
 import TeamEditForm from '../components/TeamEditForm';
 import {
@@ -21,6 +22,32 @@ import {
     DESELECT_GAME,
 } from '../actions/game';
 
+const EditFormValidator = () => {
+    const getValidState = () => {
+        return {
+            valid: true,
+            message: '',
+        };
+    };
+
+    return {
+        validateTitle: data => {
+            const { title } = data;
+            if (!title || title.trim().length === 0) {
+                return {
+                    valid: false,
+                    message: 'Please input a title of game.',
+                };
+            }
+            return getValidState();
+        },
+        validateTeamAName: data => {
+            const { teamAName } = data;
+            return getValidState();
+        },
+    };
+};
+
 const EditGameView = ({ navigation }) => {
     const dispatch = useDispatch();
     const { game, gameSaving, gameSaveError, gameSaveCompleted } = useSelector(
@@ -28,20 +55,23 @@ const EditGameView = ({ navigation }) => {
     );
 
     const [title, setTitle] = useState('');
+    const [titleError, setTitleError] = useState('');
     const [teamAName, setTeamAName] = useState('');
     const [teamAColor, setTeamAColor] = useState('');
 
     const [teamBName, setTeamBName] = useState('');
     const [teamBColor, setTeamBColor] = useState('');
+    const [isClosed, setIsClosed] = useState(false);
+    const validator = EditFormValidator();
 
-    useEffect(() => {
-        const selectedGame = navigation.getParam('selectedGame', null);
-        if (!!selectedGame) {
-            dispatch({ type: SELECT_GAME, data: JSON.parse(selectedGame) });
-        } else {
-            dispatch({ type: NEW_GAME });
-        }
-    }, []);
+    // useEffect(() => {
+    //     const selectedGame = navigation.getParam('selectedGame', null);
+    //     if (!!selectedGame) {
+    //         dispatch({ type: SELECT_GAME, data: JSON.parse(selectedGame) });
+    //     } else {
+    //         dispatch({ type: NEW_GAME });
+    //     }
+    // }, []);
 
     useEffect(() => {
         if (game) {
@@ -50,12 +80,14 @@ const EditGameView = ({ navigation }) => {
             setTeamAColor(game.teamAColor);
             setTeamBName(game.teamBName);
             setTeamBColor(game.teamBColor);
+            setIsClosed(game.isClosed);
         } else {
             setTitle('');
             setTeamAName('');
             setTeamAColor('');
             setTeamBName('');
             setTeamBColor('');
+            setIsClosed(false);
         }
     }, [game]);
 
@@ -70,6 +102,8 @@ const EditGameView = ({ navigation }) => {
 
     const onChangeTitle = useCallback(text => {
         setTitle(text);
+        const { message } = validator.validateTitle({ title: text });
+        setTitleError(message);
     }, []);
     const onChangeTeamAName = useCallback(text => {
         setTeamAName(text);
@@ -87,6 +121,10 @@ const EditGameView = ({ navigation }) => {
         setTeamBColor(value);
     }, []);
 
+    const onValueChangeIsClosed = useCallback(value => {
+        setIsClosed(value);
+    }, []);
+
     const onPressSave = useCallback(() => {
         const saveData = {};
 
@@ -96,7 +134,7 @@ const EditGameView = ({ navigation }) => {
         saveData.teamAColor = teamAColor;
         saveData.teamBName = teamBName;
         saveData.teamBColor = teamBColor;
-        saveData.isClosed = false;
+        saveData.isClosed = isClosed;
 
         dispatch({
             type: SAVE_GAME_CALL,
@@ -110,20 +148,31 @@ const EditGameView = ({ navigation }) => {
         teamAColor,
         teamBName,
         teamBColor,
+        isClosed,
     ]);
 
     return (
         <SafeAreaView>
             <View style={{ padding: 15 }}>
-                <Text>Title</Text>
-                <TextInput
-                    style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                    onChangeText={onChangeTitle}
-                    value={title}
-                    maxLength={20}
-                    placeholder="Input a game title."
-                    returnKeyType="next"
-                />
+                <View>
+                    <View>
+                        <Text>Title</Text>
+                        <TextInput
+                            style={{
+                                height: 40,
+                                borderColor: 'gray',
+                                borderWidth: 1,
+                            }}
+                            onChangeText={onChangeTitle}
+                            value={title}
+                            maxLength={50}
+                            placeholder="Input a game title."
+                            returnKeyType="next"
+                        />
+                    </View>
+                    <Text style={{ color: 'red' }}>{titleError}</Text>
+                </View>
+
                 <View style={{ height: 15 }} />
                 <Text>Team A</Text>
                 <TeamEditForm
@@ -140,7 +189,13 @@ const EditGameView = ({ navigation }) => {
                     onChangeTeamName={onChangeTeamBName}
                     onChangeTeamColor={onChangeTeamBColor}
                 />
-                <Button onPress={onPressSave} title="Save" />
+                <View style={{ height: 15 }} />
+                <Text>Closed</Text>
+                <Switch
+                    value={isClosed}
+                    onValueChange={onValueChangeIsClosed}
+                />
+                <Button onPress={onPressSave} title="Save" type="solid" />
                 <Text>{JSON.stringify(game)}</Text>
             </View>
         </SafeAreaView>

@@ -13,11 +13,11 @@ import {
     Button,
 } from 'react-native';
 const colors = [
-    { value: 'red', label: 'Red' },
-    { value: 'blue', label: 'Blue' },
-    { value: 'yellow', label: 'Yellow' },
-    { value: 'white', label: 'White' },
-    { value: 'green', label: 'Green' },
+    { value: '#ff0000d0', label: 'Red' },
+    { value: '#0000ffd0', label: 'Blue' },
+    { value: '#ffd700d0', label: 'Yellow' },
+    { value: '#d8d8d8d0', label: 'White' },
+    { value: '#00ff00d0', label: 'Green' },
 ];
 
 const TeamEditForm = ({
@@ -86,7 +86,7 @@ const TeamEditForm = ({
                 style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
                 onChangeText={onChangeName}
                 value={name}
-                maxLength={20}
+                maxLength={50}
                 placeholder="Input a team name."
                 returnKeyType="next"
             />

@@ -9,13 +9,15 @@ const DrawerNavigator = createDrawerNavigator({
     Main: {
         screen: MainViewNavigator,
         navigationOptions: {
-            drawerLabel: 'Main',
+            drawerLabel: 'Games',
+            title: 'Games',
         },
     },
     Info: {
         screen: InfoViewNavigator,
         navigationOptions: {
             drawerLabel: 'Info',
+            title: 'Info',
         },
     },
 });

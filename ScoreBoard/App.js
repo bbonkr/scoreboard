@@ -23,7 +23,9 @@ import {
     DebugInstructions,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import { Provider as AntDesignProvider } from '@ant-design/react-native';
+
+import { ThemeProvider } from 'react-native-elements';
+
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import RootStack from './components/RootStack';
 import DrawerNavigator from './components/DrawerNavigator';
@@ -50,10 +52,9 @@ const App = () => {
 
     return (
         <Provider store={store}>
-            <AntDesignProvider>
-                {/* {splash ? <Splash onPrepare={onPrepare} /> : <AppContainer />} */}
+            <ThemeProvider>
                 <AppContainer />
-            </AntDesignProvider>
+            </ThemeProvider>
         </Provider>
     );
 };

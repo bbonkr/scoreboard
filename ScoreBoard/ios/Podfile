@@ -32,6 +32,9 @@ target 'ScoreBoard' do
 
 
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
+
   target 'ScoreBoardTests' do
     inherit! :search_paths
     # Pods for testing

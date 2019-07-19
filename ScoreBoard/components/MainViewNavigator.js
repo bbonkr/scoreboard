@@ -3,6 +3,7 @@ import { View, Image, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import MainView from '../views/MainView';
 import EditGameView from '../views/EditGameView';
+import GameView from '../views/GameView';
 import NavigationDrawerStructure from './NavigationDrawerStructure';
 
 const MainViewNavigator = createStackNavigator({
@@ -10,7 +11,7 @@ const MainViewNavigator = createStackNavigator({
         screen: MainView,
         navigationOptions: ({ navigation }) => {
             return {
-                title: 'Main',
+                title: 'Games',
                 headerLeft: (
                     <NavigationDrawerStructure navigation={navigation} />
                 ),
@@ -23,6 +24,9 @@ const MainViewNavigator = createStackNavigator({
     },
     Edit: {
         screen: EditGameView,
+    },
+    Game: {
+        screen: GameView,
     },
 });
 

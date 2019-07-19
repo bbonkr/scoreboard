@@ -8,7 +8,6 @@ import {
     StatusBar,
 } from 'react-native';
 
-import { List, Button, Toast } from '@ant-design/react-native';
 const styles = StyleSheet.create({
     container: {
         flex: 1,
