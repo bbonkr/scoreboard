@@ -1,7 +1,15 @@
-import React, { useCallback, memo } from 'react';
-import { View, Button, Text } from 'react-native';
+import React, { useEffect, useState, useCallback, memo } from 'react';
+import { View, Button, Text, PixelRatio } from 'react-native';
 const TeamScoreCard = memo(
     ({ name, score, color, onIncrease, onDecrease, loading }) => {
+        const [pixelRatio, setPixelRatio] = useState(1.0);
+
+        useEffect(() => {
+            const ratio = PixelRatio.get();
+            console.warn('pixel ratio: ', ratio);
+            setPixelRatio(ratio);
+        }, []);
+
         const onPressIncrease = useCallback(() => {
             if (onIncrease) {
                 onIncrease();
@@ -16,18 +24,20 @@ const TeamScoreCard = memo(
         return (
             <View
                 style={{
-                    flex: 4,
+                    flex: 1,
                     flexDirection: 'column',
-                    alignItems: 'stretch',
+                    // alignItems: 'stretch',
                     justifyContent: 'space-between',
-                    padding: 24,
+                    padding: 8 * pixelRatio,
                     backgroundColor: color,
                 }}>
                 <Text
+                    numberOfLines={1}
+                    lineBreakMode="tail"
                     style={{
                         alignContent: 'flex-start',
                         textAlign: 'center',
-                        fontSize: 36,
+                        fontSize: 8 * pixelRatio /** 36 */,
                     }}>
                     {name}
                 </Text>
@@ -35,7 +45,7 @@ const TeamScoreCard = memo(
                     style={{
                         alignContent: 'flex-start',
                         textAlign: 'center',
-                        fontSize: 64,
+                        fontSize: 8 * pixelRatio /*64*/,
                         fontWeight: 'bold',
                     }}>
                     {score}
@@ -44,7 +54,8 @@ const TeamScoreCard = memo(
                 <View
                     style={{
                         flexDirection: 'row',
-                        alignContent: 'stretch',
+                        justifyContent: 'flex-end',
+                        // alignContent: 'flex-end',
                         backgroundColor: '#ffffffd3',
                     }}>
                     <View style={{ flex: 1 }}>

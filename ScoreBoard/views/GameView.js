@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { SELECT_GAME, NEW_GAME, UPDATE_SCORE_CALL } from '../actions/game';
 import TeamScoreCard from '../components/TeamScoreCard';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const GameView = ({ navigation }) => {
     const dispatch = useDispatch();
@@ -85,9 +86,10 @@ const GameView = ({ navigation }) => {
                     style={{
                         flex: 1,
                         flexDirection: mainFlexDirection,
-                        justifyContent: 'space-around',
+                        alignItems: 'stretch',
                     }}>
                     <TeamScoreCard
+                        style={{ flex: 4 }}
                         name={game.teamAName}
                         score={game.teamAScore}
                         color={game.teamAColor}
@@ -95,10 +97,11 @@ const GameView = ({ navigation }) => {
                         onDecrease={onDecreaseTeamAScore}
                         loading={gameScoreUpdating}
                     />
-                    <View style={{ flex: 1, justifyContent: 'center' }}>
+                    <View style={{ justifyContent: 'center' }}>
                         <Text style={{ textAlign: 'center' }}>VS</Text>
                     </View>
                     <TeamScoreCard
+                        style={{ flex: 4 }}
                         name={game.teamBName}
                         score={game.teamBScore}
                         color={game.teamBColor}
