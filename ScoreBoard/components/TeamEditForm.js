@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { StyledDefaultTextInput, StyledErrorText } from './Styled';
 const colors = [
+    { value: '', label: 'Select a team color.' },
     { value: '#ff0000d0', label: 'Red' },
     { value: '#0000ffd0', label: 'Blue' },
     { value: '#ffd700d0', label: 'Yellow' },
@@ -47,13 +48,6 @@ const TeamEditForm = ({
     };
 
     useEffect(() => {
-        // if (!!teamName) {
-        //     setName(teamName);
-        // }
-        // if (!!teamColor) {
-        //     onColorChanged(teamColor);
-        // }
-
         setName(teamName);
         onColorChanged(teamColor);
     }, [teamName, teamColor]);
@@ -82,7 +76,7 @@ const TeamEditForm = ({
     }, []);
 
     return (
-        <View style={{ flex: 1, padding: 15 }}>
+        <View style={{ flex: 1 }}>
             <View>
                 <Text>Name</Text>
                 <StyledDefaultTextInput

@@ -219,24 +219,27 @@ const EditGameView = ({ navigation }) => {
                         onChangeTeamColor={onChangeTeamBColor}
                     />
                     <View style={{ height: 15 }} />
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ flex: 1 }}>Closed</Text>
-                        <Switch
-                            style={{ flex: 1 }}
-                            value={isClosed}
-                            onValueChange={onValueChangeIsClosed}
-                        />
+                    <View
+                        style={{ flexDirection: 'row', alignItems: 'stretch' }}>
+                        <Text style={{ flex: 1 }}>Game is closed</Text>
+                        <View
+                            style={{
+                                flex: 1,
+                            }}>
+                            <Switch
+                                style={{ alignSelf: 'flex-end' }}
+                                value={isClosed}
+                                onValueChange={onValueChangeIsClosed}
+                            />
+                        </View>
                     </View>
                     <View style={{ height: 6 }} />
-                    <View>
+                    <View style={{ justifyContent: 'flex-end' }}>
                         <Button
                             onPress={onPressSave}
                             title="Save"
                             type="solid"
                         />
-                    </View>
-                    <View>
-                        <Text>{JSON.stringify(game)}</Text>
                     </View>
                 </View>
             </ScrollView>
