@@ -1,17 +1,22 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { withNavigation } from 'react-navigation';
-
 import {
     View,
+    ScrollView,
     SafeAreaView,
     Text,
+    TouchableHighlight,
     TouchableOpacity,
     Button,
+    TouchableNativeFeedback,
 } from 'react-native';
-import { SELECT_GAME, NEW_GAME, UPDATE_SCORE_CALL } from '../actions/game';
+import {
+    SELECT_GAME,
+    NEW_GAME,
+    UPDATE_SCORE_CALL,
+    OPEN_OR_CLOSE_GAME_CALL,
+} from '../actions/game';
 import TeamScoreCard from '../components/TeamScoreCard';
-import { ScrollView } from 'react-native-gesture-handler';
 import {
     HEADER_BACKGROUND_COLOR,
     HEADER_TINT_COLOR,
@@ -97,6 +102,7 @@ const GameView = ({ navigation }) => {
                         name={game.teamAName}
                         score={game.teamAScore}
                         color={game.teamAColor}
+                        isClosed={game.isClosed}
                         onIncrease={onIncreaseTeamAScore}
                         onDecrease={onDecreaseTeamAScore}
                         loading={gameScoreUpdating}
@@ -109,6 +115,7 @@ const GameView = ({ navigation }) => {
                         name={game.teamBName}
                         score={game.teamBScore}
                         color={game.teamBColor}
+                        isClosed={game.isClosed}
                         onIncrease={onIncreaseTeamBScore}
                         onDecrease={onDecreaseTeamBScore}
                         loading={gameScoreUpdating}
@@ -128,16 +135,50 @@ GameView.navigationOptions = ({ navigation }) => {
         },
         headerTintColor: HEADER_TINT_COLOR,
         headerRight: (
-            <TouchableOpacity
-                onPress={() => {
-                    navigation.goBack();
-                }}>
-                <Text style={{ marginRight: 5, color: HEADER_TINT_COLOR }}>
-                    Close
-                </Text>
-            </TouchableOpacity>
+            // <TouchableOpacity
+            //     onPress={() => {
+            //         navigation.goBack();
+            //     }}>
+            //     <Text style={{ marginRight: 5, color: HEADER_TINT_COLOR }}>
+            //         Close
+            //     </Text>
+            // </TouchableOpacity>
+            <GameCloseButton navigation={navigation} />
         ),
     };
+};
+
+const GameCloseButton = ({ navigation }) => {
+    const dispatch = useDispatch();
+    const { game } = useSelector(s => s.game);
+    const [actionText, setActionText] = useState('');
+
+    useEffect(() => {
+        let text = 'Close';
+        if (!!game) {
+            text = game.isClosed ? 'Open' : 'Close';
+        }
+        setActionText(text);
+    }, [game && game.isClosed]);
+
+    const onPressButtonCloseOrOpen = useCallback(() => {
+        const id = navigation.getParam('id');
+
+        dispatch({
+            type: OPEN_OR_CLOSE_GAME_CALL,
+            data: {
+                id: parseInt(id, 10),
+            },
+        });
+    }, []);
+
+    return (
+        <TouchableOpacity onPress={onPressButtonCloseOrOpen}>
+            <Text style={{ marginRight: 5, color: HEADER_TINT_COLOR }}>
+                {actionText}
+            </Text>
+        </TouchableOpacity>
+    );
 };
 
 export default GameView;

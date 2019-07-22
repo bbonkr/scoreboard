@@ -183,5 +183,31 @@ export const gameRepository = () => {
 
             return obj;
         },
+
+        async updateClose(game) {
+            const realm = await open();
+            const currentGame = await this.findById(game.id);
+            let obj = {};
+            try {
+                realm.write(() => {
+                    obj = realm.create(
+                        'Game',
+                        {
+                            id: currentGame.id,
+                            isClosed: !currentGame.isClosed,
+                            closedAt: !currentGame.isClosed
+                                ? +new Date()
+                                : null,
+                        },
+                        true,
+                    );
+                });
+            } catch (error) {
+                console.error(error);
+                throw error;
+            }
+
+            return obj;
+        },
     };
 };

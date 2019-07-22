@@ -26,6 +26,9 @@ import {
     UPDATE_SCORE_CALL,
     UPDATE_SCORE_FAIL,
     UPDATE_SCORE_DONE,
+    OPEN_OR_CLOSE_GAME_CALL,
+    OPEN_OR_CLOSE_GAME_FAIL,
+    OPEN_OR_CLOSE_GAME_DONE,
 } from '../actions/game';
 
 function initDatabaseApi() {
@@ -184,6 +187,30 @@ function* watchUpdateScore() {
     yield throttle(500, UPDATE_SCORE_CALL, updateScore);
 }
 
+function openOrCloseGameAip(id) {
+    return gameRepository().updateClose({ id: id });
+}
+
+function* openOrCloseGame(action) {
+    try {
+        const result = yield call(openOrCloseGameAip, action.data.id);
+        yield put({
+            type: OPEN_OR_CLOSE_GAME_DONE,
+            data: result,
+        });
+    } catch (error) {
+        yield put({
+            type: OPEN_OR_CLOSE_GAME_FAIL,
+            error: error,
+            reason: error.toString(),
+        });
+    }
+}
+
+function* watchOpenOrCloseGmae() {
+    yield takeLatest(OPEN_OR_CLOSE_GAME_CALL, openOrCloseGame);
+}
+
 export default function* gameSage() {
     yield all([
         fork(watchInitDatabase),
@@ -191,5 +218,6 @@ export default function* gameSage() {
         fork(watchSaveGame),
         fork(watchDeleteGame),
         fork(watchUpdateScore),
+        fork(watchOpenOrCloseGmae),
     ]);
 }

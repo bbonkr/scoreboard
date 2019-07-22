@@ -18,6 +18,9 @@ import {
     UPDATE_SCORE_CALL,
     UPDATE_SCORE_DONE,
     UPDATE_SCORE_FAIL,
+    OPEN_OR_CLOSE_GAME_CALL,
+    OPEN_OR_CLOSE_GAME_DONE,
+    OPEN_OR_CLOSE_GAME_FAIL,
 } from '../actions/game';
 
 const initialState = {
@@ -42,6 +45,7 @@ const initialState = {
     gameDeleteCompleted: false,
 
     gameScoreUpdating: false,
+    gameOpenCloseUpdating: false,
 };
 
 const reducer = (state = initialState, action) =>
@@ -148,7 +152,16 @@ const reducer = (state = initialState, action) =>
             case UPDATE_SCORE_FAIL:
                 draft.gameScoreUpdating = false;
                 break;
-
+            case OPEN_OR_CLOSE_GAME_CALL:
+                draft.gameOpenCloseUpdating = true;
+                break;
+            case OPEN_OR_CLOSE_GAME_DONE:
+                draft.game = action.data;
+                draft.gameOpenCloseUpdating = false;
+                break;
+            case OPEN_OR_CLOSE_GAME_FAIL:
+                draft.gameOpenCloseUpdating = false;
+                break;
             default:
                 break;
         }

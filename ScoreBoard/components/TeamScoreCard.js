@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, memo } from 'react';
 import { View, Button, Text, PixelRatio } from 'react-native';
 const TeamScoreCard = memo(
-    ({ name, score, color, onIncrease, onDecrease, loading }) => {
+    ({ name, score, color, isClosed, onIncrease, onDecrease, loading }) => {
         const [pixelRatio, setPixelRatio] = useState(1.0);
 
         useEffect(() => {
@@ -60,7 +60,7 @@ const TeamScoreCard = memo(
                     }}>
                     <View style={{ flex: 1 }}>
                         <Button
-                            disabled={loading}
+                            disabled={loading || isClosed}
                             onPress={onPressIncrease}
                             title="+"
                         />
@@ -68,7 +68,7 @@ const TeamScoreCard = memo(
 
                     <View style={{ flex: 1 }}>
                         <Button
-                            disabled={score === 0 || loading}
+                            disabled={score === 0 || loading || isClosed}
                             onPress={onPressDecrease}
                             title="-"
                         />
