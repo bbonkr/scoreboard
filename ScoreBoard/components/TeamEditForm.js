@@ -12,6 +12,7 @@ import {
     Picker,
     Button,
 } from 'react-native';
+import { StyledDefaultTextInput, StyledErrorText } from './Styled';
 const colors = [
     { value: '#ff0000d0', label: 'Red' },
     { value: '#0000ffd0', label: 'Blue' },
@@ -23,6 +24,7 @@ const colors = [
 const TeamEditForm = ({
     teamName,
     teamColor,
+    teamNameError,
     onChangeTeamName,
     onChangeTeamColor,
 }) => {
@@ -80,18 +82,24 @@ const TeamEditForm = ({
     }, []);
 
     return (
-        <View style={{ padding: 15 }}>
-            <Text>Name</Text>
-            <TextInput
-                style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                onChangeText={onChangeName}
-                value={name}
-                maxLength={50}
-                placeholder="Input a team name."
-                returnKeyType="next"
-            />
-            <Text>Color</Text>
+        <View style={{ flex: 1, padding: 15 }}>
             <View>
+                <Text>Name</Text>
+                <StyledDefaultTextInput
+                    onChangeText={onChangeName}
+                    value={name}
+                    maxLength={50}
+                    placeholder="Input a team name."
+                    returnKeyType="next"
+                />
+                {!!teamNameError && (
+                    <StyledErrorText>{teamNameError || ''}</StyledErrorText>
+                )}
+            </View>
+            <View style={{ height: 6 }} />
+
+            <View>
+                <Text>Color</Text>
                 <View>
                     {!showColorPicker && (
                         <TouchableOpacity

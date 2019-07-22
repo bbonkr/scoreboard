@@ -14,6 +14,11 @@ import {
     Button,
     Switch,
 } from 'react-native';
+import {
+    StyledSafeAreaView,
+    StyledDefaultTextInput,
+    StyledErrorText,
+} from '../components/Styled';
 import TeamEditForm from '../components/TeamEditForm';
 import {
     SAVE_GAME_CALL,
@@ -43,6 +48,22 @@ const EditFormValidator = () => {
         },
         validateTeamAName: data => {
             const { teamAName } = data;
+            if (!teamAName || teamAName.trim().length === 0) {
+                return {
+                    valid: false,
+                    message: 'Please input a name of team A',
+                };
+            }
+            return getValidState();
+        },
+        validateTeamBName: data => {
+            const { teamBName } = data;
+            if (!teamBName || teamBName.trim().length === 0) {
+                return {
+                    valid: false,
+                    message: 'Please input a name of team B',
+                };
+            }
             return getValidState();
         },
     };
@@ -57,9 +78,11 @@ const EditGameView = ({ navigation }) => {
     const [title, setTitle] = useState('');
     const [titleError, setTitleError] = useState('');
     const [teamAName, setTeamAName] = useState('');
+    const [teamANameError, setTeamANameError] = useState('');
     const [teamAColor, setTeamAColor] = useState('');
 
     const [teamBName, setTeamBName] = useState('');
+    const [teamBNameError, setTeamBNameError] = useState('');
     const [teamBColor, setTeamBColor] = useState('');
     const [isClosed, setIsClosed] = useState(false);
     const validator = EditFormValidator();
@@ -107,6 +130,8 @@ const EditGameView = ({ navigation }) => {
     }, []);
     const onChangeTeamAName = useCallback(text => {
         setTeamAName(text);
+        const { message } = validator.validateTeamAName({ teamAName: text });
+        setTeamANameError(message);
     }, []);
 
     const onChangeTeamAColor = useCallback(value => {
@@ -115,6 +140,8 @@ const EditGameView = ({ navigation }) => {
 
     const onChangeTeamBName = useCallback(text => {
         setTeamBName(text);
+        const { message } = validator.validateTeamBName({ teamBName: text });
+        setTeamBNameError(message);
     }, []);
 
     const onChangeTeamBColor = useCallback(value => {
@@ -152,53 +179,68 @@ const EditGameView = ({ navigation }) => {
     ]);
 
     return (
-        <SafeAreaView>
-            <View style={{ padding: 15 }}>
-                <View>
+        <StyledSafeAreaView>
+            <ScrollView style={{ flex: 1 }}>
+                <View style={{ padding: 15 }}>
                     <View>
-                        <Text>Title</Text>
-                        <TextInput
-                            style={{
-                                height: 40,
-                                borderColor: 'gray',
-                                borderWidth: 1,
-                            }}
-                            onChangeText={onChangeTitle}
-                            value={title}
-                            maxLength={50}
-                            placeholder="Input a game title."
-                            returnKeyType="next"
+                        <View>
+                            <Text>Title</Text>
+                            <StyledDefaultTextInput
+                                onChangeText={onChangeTitle}
+                                value={title}
+                                maxLength={50}
+                                placeholder="Input a game title."
+                                returnKeyType="next"
+                            />
+                        </View>
+                        {!!titleError && (
+                            <StyledErrorText>
+                                {titleError || ''}
+                            </StyledErrorText>
+                        )}
+                    </View>
+
+                    <View style={{ height: 15 }} />
+                    <Text>Team A</Text>
+                    <TeamEditForm
+                        teamName={teamAName}
+                        teamNameError={teamANameError}
+                        teamColor={teamAColor}
+                        onChangeTeamName={onChangeTeamAName}
+                        onChangeTeamColor={onChangeTeamAColor}
+                    />
+                    <View style={{ height: 6 }} />
+                    <Text>Team B</Text>
+                    <TeamEditForm
+                        teamName={teamBName}
+                        teamNameError={teamBNameError}
+                        teamColor={teamBColor}
+                        onChangeTeamName={onChangeTeamBName}
+                        onChangeTeamColor={onChangeTeamBColor}
+                    />
+                    <View style={{ height: 15 }} />
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={{ flex: 1 }}>Closed</Text>
+                        <Switch
+                            style={{ flex: 1 }}
+                            value={isClosed}
+                            onValueChange={onValueChangeIsClosed}
                         />
                     </View>
-                    <Text style={{ color: 'red' }}>{titleError}</Text>
+                    <View style={{ height: 6 }} />
+                    <View>
+                        <Button
+                            onPress={onPressSave}
+                            title="Save"
+                            type="solid"
+                        />
+                    </View>
+                    <View>
+                        <Text>{JSON.stringify(game)}</Text>
+                    </View>
                 </View>
-
-                <View style={{ height: 15 }} />
-                <Text>Team A</Text>
-                <TeamEditForm
-                    teamName={teamAName}
-                    teamColor={teamAColor}
-                    onChangeTeamName={onChangeTeamAName}
-                    onChangeTeamColor={onChangeTeamAColor}
-                />
-                <View style={{ height: 15 }} />
-                <Text>Team B</Text>
-                <TeamEditForm
-                    teamName={teamBName}
-                    teamColor={teamBColor}
-                    onChangeTeamName={onChangeTeamBName}
-                    onChangeTeamColor={onChangeTeamBColor}
-                />
-                <View style={{ height: 15 }} />
-                <Text>Closed</Text>
-                <Switch
-                    value={isClosed}
-                    onValueChange={onValueChangeIsClosed}
-                />
-                <Button onPress={onPressSave} title="Save" type="solid" />
-                <Text>{JSON.stringify(game)}</Text>
-            </View>
-        </SafeAreaView>
+            </ScrollView>
+        </StyledSafeAreaView>
     );
 };
 
