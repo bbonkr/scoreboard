@@ -6,7 +6,7 @@ const TeamScoreCard = memo(
 
         useEffect(() => {
             const ratio = PixelRatio.get();
-            console.warn('pixel ratio: ', ratio);
+            // console.warn('pixel ratio: ', ratio);
             setPixelRatio(ratio);
         }, []);
 
@@ -37,7 +37,7 @@ const TeamScoreCard = memo(
                     style={{
                         alignContent: 'flex-start',
                         textAlign: 'center',
-                        fontSize: 8 * pixelRatio /** 36 */,
+                        fontSize: 8 * 2 * pixelRatio /** 36 */,
                     }}>
                     {name}
                 </Text>
@@ -45,7 +45,7 @@ const TeamScoreCard = memo(
                     style={{
                         alignContent: 'flex-start',
                         textAlign: 'center',
-                        fontSize: 8 * pixelRatio /*64*/,
+                        fontSize: 8 * 3 * pixelRatio /*64*/,
                         fontWeight: 'bold',
                     }}>
                     {score}
