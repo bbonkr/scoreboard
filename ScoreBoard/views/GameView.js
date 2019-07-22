@@ -12,6 +12,10 @@ import {
 import { SELECT_GAME, NEW_GAME, UPDATE_SCORE_CALL } from '../actions/game';
 import TeamScoreCard from '../components/TeamScoreCard';
 import { ScrollView } from 'react-native-gesture-handler';
+import {
+    HEADER_BACKGROUND_COLOR,
+    HEADER_TINT_COLOR,
+} from '../constants/colors';
 
 const GameView = ({ navigation }) => {
     const dispatch = useDispatch();
@@ -119,12 +123,18 @@ GameView.navigationOptions = ({ navigation }) => {
     return {
         drawerLabel: 'Game',
         title: navigation.getParam('title', 'Game'),
+        headerStyle: {
+            backgroundColor: HEADER_BACKGROUND_COLOR,
+        },
+        headerTintColor: HEADER_TINT_COLOR,
         headerRight: (
             <TouchableOpacity
                 onPress={() => {
                     navigation.goBack();
                 }}>
-                <Text style={{ marginRight: 5 }}>Close</Text>
+                <Text style={{ marginRight: 5, color: HEADER_TINT_COLOR }}>
+                    Close
+                </Text>
             </TouchableOpacity>
         ),
     };

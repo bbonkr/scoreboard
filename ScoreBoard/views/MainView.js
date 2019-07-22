@@ -23,6 +23,7 @@ import {
     DELETE_GAME_CALL,
 } from '../actions/game';
 import TeamCard from '../components/TeamCard';
+import { HEADER_TINT_COLOR } from '../constants/colors';
 
 const PAGE_SIZE = 10;
 
@@ -254,7 +255,7 @@ MainView.navigationOptions = ({ navigation }) => {
         title: 'Games',
         headerRight: (
             <Text
-                style={{ marginRight: 5 }}
+                style={{ marginRight: 5, color: HEADER_TINT_COLOR }}
                 onPress={() => {
                     navigation.navigate('Edit', { id: null });
                 }}>

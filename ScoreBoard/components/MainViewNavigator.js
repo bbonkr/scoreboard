@@ -5,7 +5,10 @@ import MainView from '../views/MainView';
 import EditGameView from '../views/EditGameView';
 import GameView from '../views/GameView';
 import NavigationDrawerStructure from './NavigationDrawerStructure';
-
+import {
+    HEADER_BACKGROUND_COLOR,
+    HEADER_TINT_COLOR,
+} from '../constants/colors';
 const MainViewNavigator = createStackNavigator({
     Main: {
         screen: MainView,
@@ -16,9 +19,9 @@ const MainViewNavigator = createStackNavigator({
                     <NavigationDrawerStructure navigation={navigation} />
                 ),
                 headerStyle: {
-                    backgroundColor: '#FF9800',
+                    backgroundColor: HEADER_BACKGROUND_COLOR,
                 },
-                headerTintColor: '#fff',
+                headerTintColor: HEADER_TINT_COLOR,
             };
         },
     },

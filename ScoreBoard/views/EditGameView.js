@@ -26,6 +26,10 @@ import {
     NEW_GAME,
     DESELECT_GAME,
 } from '../actions/game';
+import {
+    HEADER_BACKGROUND_COLOR,
+    HEADER_TINT_COLOR,
+} from '../constants/colors';
 
 const EditFormValidator = () => {
     const getValidState = () => {
@@ -251,14 +255,18 @@ EditGameView.navigationOptions = ({ navigation }) => {
     return {
         drawerLabel: 'Edit',
         title: 'Edit',
-        headerRight: (
-            <TouchableOpacity
-                onPress={() => {
-                    navigation.goBack();
-                }}>
-                <Text style={{ marginRight: 5 }}>Save</Text>
-            </TouchableOpacity>
-        ),
+        headerStyle: {
+            backgroundColor: HEADER_BACKGROUND_COLOR,
+        },
+        headerTintColor: HEADER_TINT_COLOR,
+        // headerRight: (
+        //     <TouchableOpacity
+        //         onPress={() => {
+        //             navigation.goBack();
+        //         }}>
+        //         <Text style={{ marginRight: 5 }}>Save</Text>
+        //     </TouchableOpacity>
+        // ),
     };
 };
 
