@@ -27,3 +27,21 @@ export const StyledDefaultTextInput = styled(TextInput)`
 export const StyledErrorText = styled(Text)`
     color: red;
 `;
+
+export const StyledTitleText = styled(Text)`
+    font-size: 24;
+    font-weight: bold;
+    padding: 3px;
+`;
+
+export const StyledSubtitleText = styled(Text)`
+    font-size: 18;
+    font-weight: bold;
+    padding: 3px;
+`;
+
+export const StyledText = styled(Text)`
+    font-size: 12;
+    font-weight: bold;
+    line-height: 1.3;
+`;

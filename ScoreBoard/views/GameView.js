@@ -107,7 +107,7 @@ const GameView = ({ navigation }) => {
                         onDecrease={onDecreaseTeamAScore}
                         loading={gameScoreUpdating}
                     />
-                    <View style={{ justifyContent: 'center' }}>
+                    <View style={{ justifyContent: 'center', padding: 24 }}>
                         <Text style={{ textAlign: 'center' }}>VS</Text>
                     </View>
                     <TeamScoreCard

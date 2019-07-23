@@ -8,7 +8,7 @@ import {
 
 import MainViewNavigator from './MainViewNavigator';
 import InfoViewNavigator from './InfoViewNavigator';
-import { HEADER_BACKGROUND_COLOR } from '../constants/colors';
+import { IMAGE_BACKGROUND_COLOR } from '../constants/colors';
 
 const DrawerNavigator = createDrawerNavigator(
     {
@@ -29,18 +29,28 @@ const DrawerNavigator = createDrawerNavigator(
     },
     {
         contentComponent: props => (
-            <ScrollView>
-                <SafeAreaView style={{ flex: 1 }}>
-                    <View
+            <SafeAreaView
+                style={{
+                    flex: 1,
+                    backgroundColor: IMAGE_BACKGROUND_COLOR,
+                }}>
+                <View
+                    style={{
+                        padding: 12,
+                    }}>
+                    <Image
+                        source={require('../images/scoreboard.png')}
                         style={{
-                            backgroundColor: HEADER_BACKGROUND_COLOR,
-                            padding: 12,
-                        }}>
-                        <Text>ScoreBoard</Text>
-                    </View>
+                            width: 120,
+                            height: 120,
+                            alignSelf: 'center',
+                        }}
+                    />
+                </View>
+                <ScrollView style={{ backgroundColor: '#fff' }}>
                     <DrawerItems {...props} />
-                </SafeAreaView>
-            </ScrollView>
+                </ScrollView>
+            </SafeAreaView>
         ),
     },
 );

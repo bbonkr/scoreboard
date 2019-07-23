@@ -23,6 +23,7 @@ import {
     DELETE_GAME_CALL,
 } from '../actions/game';
 import TeamCard from '../components/TeamCard';
+import { StyledTitleText } from '../components/Styled';
 import { HEADER_TINT_COLOR } from '../constants/colors';
 
 const PAGE_SIZE = 10;
@@ -177,7 +178,7 @@ const MainView = ({ navigation }) => {
                                     style={{ backgroundColor: 'white' }}>
                                     <TouchableOpacity
                                         onPress={onPressGame(item)}>
-                                        <Text
+                                        <StyledTitleText
                                             numberOfLines={1}
                                             ellipsizeMode="tail"
                                             style={{
@@ -186,7 +187,7 @@ const MainView = ({ navigation }) => {
                                                 fontWeight: 'bold',
                                             }}>
                                             {item.title}
-                                        </Text>
+                                        </StyledTitleText>
                                         <View
                                             style={{
                                                 flexDirection: 'row',
