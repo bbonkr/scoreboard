@@ -1,0 +1,68 @@
+{
+    "appName": "Score Board",
+    "appDisplayName": "Score Board",
+    "navigation": {
+        "main": "Games",
+        "info": "About"
+    },
+    "main": {
+        "title": "Games",
+        "add": "Add",
+        "delete": "Delete",
+        "edit": "Edit",
+        "loadMore": "Load more",
+        "confirmDelete": {
+            "title": "Delete",
+            "message": "Do you want to delete a game?",
+            "buttons": {
+                "yes": "Delete",
+                "no": "Cancel"
+            }
+        }
+    },
+    "info": {
+        "title": "About",
+        "content": {
+            "title": "Score Board",
+            "message1": "With this application, conveniently record your score anywhere.",
+            "message2": "If you like this app and you like it, you can send me a cup of coffee.",
+            "sendACupOfCofee": "Send a cup of coffe"
+        }
+    },
+    "edit": {
+        "title": "Edit",
+        "form": {
+            "title": "Title",
+            "titlePlaceholder": "Input a title of game.",
+            "titleError": "Input a title of game.",
+            "teamA": "Team A",
+            "teamB": "Team B",
+            "name": "Team name",
+            "namePlaceholder": "Input a name of team.",
+            "nameError": "Input a name of team.",
+            "color": "Team color",
+            "colorPlaceholder": "Select a color of team.",
+            "message": {
+                "selectTeamColor": "Select a color of team"
+            },
+            "isClosed": "Game is closed",
+            "save": "Save",
+            "cancel": "Cancel"
+        }
+    },
+    "game": {
+        "title": "Game",
+        "open": "Open",
+        "close": "Close"
+    },
+    "constants": {
+        "colors": {
+            "none": "Select a color.",
+            "red": "Red",
+            "blue": "Blue",
+            "yellow": "Yellow",
+            "white": "White",
+            "green": "Green"
+        }
+    }
+}

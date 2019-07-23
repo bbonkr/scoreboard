@@ -86,13 +86,14 @@ export const gameRepository = () => {
                 .filtered('createdAt > $0 AND isDeleted != true', pageToken)
                 .sorted('createdAt', true);
         },
+
         async addItem(game) {
             const realm = await open();
             const maxId = realm.objects('Game').max('id');
-
+            let obj = {};
             try {
                 realm.write(() => {
-                    realm.create('Game', {
+                    obj = realm.create('Game', {
                         ...game,
                         id: (maxId || 0) + 1,
                         createdAt: +new Date(),
@@ -102,17 +103,26 @@ export const gameRepository = () => {
                 console.error(e);
                 throw e;
             }
+            return obj;
         },
         async updateItem(game) {
             const realm = await open();
+            let obj = {};
             try {
                 realm.write(() => {
-                    realm.create(
+                    obj = realm.create(
                         'Game',
                         {
-                            ...game,
+                            id: game.id,
+                            title: game.title,
+                            teamAName: game.teamAName,
+                            teamAColor: game.teamAColor,
+                            teamBName: game.teamBName,
+                            teamBColor: game.teamBColor,
+                            isClosed: game.isClosed,
+                            closedAt:
+                                game.isClosed || false ? +new Date() : null,
                             updatedAt: +new Date(),
-                            closedAt: isClosed ? +new Date() : null,
                         },
                         true,
                     );
@@ -121,23 +131,83 @@ export const gameRepository = () => {
                 console.error(e);
                 throw e;
             }
+            return obj;
         },
 
         async deleteItem(game) {
             const realm = await open();
+            let obj = {};
             try {
                 realm.write(() => {
                     // realm.delete(game);
-                    realm.create('Game', {
-                        ...game,
-                        isDeleted: true,
-                        deletedAt: +new Date(),
-                    });
+
+                    obj = realm.create(
+                        'Game',
+                        {
+                            // ...game,
+                            id: game.id,
+                            isDeleted: true,
+                            deletedAt: +new Date(),
+                        },
+                        true,
+                    );
                 });
             } catch (e) {
                 console.error(e);
                 throw e;
             }
+
+            return obj;
+        },
+
+        async updateScore(game) {
+            const realm = await open();
+            let obj = {};
+            try {
+                realm.write(() => {
+                    obj = realm.create(
+                        'Game',
+                        {
+                            id: game.id,
+                            teamAScore: game.teamAScore,
+                            teamBScore: game.teamBScore,
+                            updatedAt: +new Date(),
+                        },
+                        true,
+                    );
+                });
+            } catch (error) {
+                console.error(error);
+                throw error;
+            }
+
+            return obj;
+        },
+
+        async updateClose(game) {
+            const realm = await open();
+            const currentGame = await this.findById(game.id);
+            let obj = {};
+            try {
+                realm.write(() => {
+                    obj = realm.create(
+                        'Game',
+                        {
+                            id: currentGame.id,
+                            isClosed: !currentGame.isClosed,
+                            closedAt: !currentGame.isClosed
+                                ? +new Date()
+                                : null,
+                        },
+                        true,
+                    );
+                });
+            } catch (error) {
+                console.error(error);
+                throw error;
+            }
+
+            return obj;
         },
     };
 };

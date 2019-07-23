@@ -31,6 +31,10 @@ target 'ScoreBoard' do
   # https://github.com/andpor/react-native-sqlite-storage
 
 
+  pod 'RNLocalize', :path => '../node_modules/react-native-localize'
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
+
 
   target 'ScoreBoardTests' do
     inherit! :search_paths

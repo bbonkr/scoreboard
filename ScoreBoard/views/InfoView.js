@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -6,25 +6,60 @@ import {
     View,
     Text,
     StatusBar,
+    Button,
+    Image,
 } from 'react-native';
-
-import { List, Button, Toast } from '@ant-design/react-native';
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-});
+import { StyledSafeAreaView, StyledTitleText } from '../components/Styled';
+import { IMAGE_BACKGROUND_COLOR } from '../constants/colors';
+import i18n from '../i18n';
+import * as RNLocalize from 'react-native-localize';
 
 const InfoView = () => {
+    useEffect(() => {
+        // RNLocalize.addEventListener('change', () => {
+        //     // do localization related stuff…
+        //     const locales = RNLocalize.getLocales();
+        //     if (locales.length > 0) {
+        //         const { languageCode } = locales[0];
+        //         i18n.locale = languageCode;
+        //     } else {
+        //         i18n.locale = 'en';
+        //     }
+        // });
+    }, []);
     return (
-        <SafeAreaView>
-            <Text>InfoView</Text>
-        </SafeAreaView>
+        <StyledSafeAreaView>
+            <View>
+                <View
+                    style={{
+                        padding: 24,
+                        backgroundColor: IMAGE_BACKGROUND_COLOR,
+                    }}>
+                    <Image
+                        source={require('../images/scoreboard.png')}
+                        style={{ width: 150, height: 150, alignSelf: 'center' }}
+                    />
+                </View>
+                <View style={{ height: 6 }} />
+                <View style={{ padding: 12 }}>
+                    <StyledTitleText>
+                        {i18n.t('info.content.title')}
+                    </StyledTitleText>
+                    <View style={{ height: 6 }} />
+                    <Text>{i18n.t('info.content.message1')}</Text>
+                    <View style={{ height: 3 }} />
+                    <Text>{i18n.t('info.content.message2')}</Text>
+                    <View style={{ height: 24 }} />
+                    <Button title={i18n.t('info.content.sendACupOfCofee')} />
+                </View>
+            </View>
+        </StyledSafeAreaView>
     );
 };
 
 InfoView.navigationOptions = {
-    drawerLabel: 'Info',
+    drawerLabel: i18n.t('navigation.info'),
+    title: i18n.t('info.title'),
 };
 
 export default InfoView;

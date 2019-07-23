@@ -1,16 +1,33 @@
 import React, { useState, useCallback, useEffect } from 'react';
-
-const colors = [
-    { value: 'red', label: 'Red' },
-    { value: 'blue', label: 'Blue' },
-    { value: 'yellow', label: 'Yellow' },
-    { value: 'white', label: 'White' },
-    { value: 'green', label: 'Green' },
-];
+import {
+    SafeAreaView,
+    TouchableOpacity,
+    StyleSheet,
+    ScrollView,
+    View,
+    Text,
+    StatusBar,
+    FlatList,
+    TextInput,
+    Picker,
+    Button,
+} from 'react-native';
+import { StyledDefaultTextInput, StyledErrorText } from './Styled';
+import i18n from '../i18n';
+import { colors } from '../constants/colors';
+// const colors = [
+//     { value: '', label: 'Select a team color.' },
+//     { value: '#ff0000d0', label: 'Red' },
+//     { value: '#0000ffd0', label: 'Blue' },
+//     { value: '#ffd700d0', label: 'Yellow' },
+//     { value: '#d8d8d8d0', label: 'White' },
+//     { value: '#00ff00d0', label: 'Green' },
+// ];
 
 const TeamEditForm = ({
     teamName,
     teamColor,
+    teamNameError,
     onChangeTeamName,
     onChangeTeamColor,
 }) => {
@@ -24,22 +41,18 @@ const TeamEditForm = ({
             setColor('');
             setColorLabel('');
         } else {
-            const arr = colors.filter(v => v.value === itemValue);
+            const arr = colors.filter(v => v.value === color);
             if (arr && arr.length > 0) {
                 setColorLabel(arr[0].label);
             }
-            setColor(itemValue);
+            setColor(color);
         }
     };
 
     useEffect(() => {
-        if (!!teamName) {
-            setName(teamName);
-        }
-        if (!!teamColor) {
-            onColorChanged(itemValue);
-        }
-    }, []);
+        setName(teamName);
+        onColorChanged(teamColor);
+    }, [teamName, teamColor]);
 
     const onChangeName = useCallback(text => {
         setName(text);
@@ -65,18 +78,24 @@ const TeamEditForm = ({
     }, []);
 
     return (
-        <View style={{ padding: 15 }}>
-            <Text>Name</Text>
-            <TextInput
-                style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                onChangeText={onChangeName}
-                value={name}
-                maxLength={20}
-                placeholder="Input a team name."
-                returnKeyType="next"
-            />
-            <Text>Color</Text>
+        <View style={{ flex: 1 }}>
             <View>
+                <Text>{i18n.t('edit.form.name')}</Text>
+                <StyledDefaultTextInput
+                    onChangeText={onChangeName}
+                    value={name}
+                    maxLength={50}
+                    placeholder={i18n.t('edit.form.namePlaceholder')}
+                    returnKeyType="next"
+                />
+                {!!teamNameError && (
+                    <StyledErrorText>{teamNameError || ''}</StyledErrorText>
+                )}
+            </View>
+            <View style={{ height: 6 }} />
+
+            <View>
+                <Text>{i18n.t('edit.form.color')}</Text>
                 <View>
                     {!showColorPicker && (
                         <TouchableOpacity
@@ -84,20 +103,25 @@ const TeamEditForm = ({
                                 heigth: 40,
                                 paddingTop: 6,
                                 paddingBottom: 6,
-                                backgroundColor: teamAColor,
+                                backgroundColor: color,
                             }}
                             onPress={onPressShowColorPicker}>
-                            <Text>{colorLabel || "Select a team's color"}</Text>
+                            <Text>
+                                {colorLabel ||
+                                    i18n.t('edit.form.colorPlaceholder')}
+                            </Text>
                         </TouchableOpacity>
                     )}
 
                     {showColorPicker && (
                         <View>
                             <View>
-                                <Text>Select color.</Text>
+                                <Text>
+                                    {i18n.t('edit.form.colorPlaceholder')}
+                                </Text>
                                 <Button
                                     onPress={onPressCancelPickerColor}
-                                    title="Cancel"
+                                    title={i18n.t('edit.form.cancel')}
                                 />
                             </View>
                             <Picker
