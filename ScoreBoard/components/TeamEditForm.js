@@ -13,14 +13,16 @@ import {
     Button,
 } from 'react-native';
 import { StyledDefaultTextInput, StyledErrorText } from './Styled';
-const colors = [
-    { value: '', label: 'Select a team color.' },
-    { value: '#ff0000d0', label: 'Red' },
-    { value: '#0000ffd0', label: 'Blue' },
-    { value: '#ffd700d0', label: 'Yellow' },
-    { value: '#d8d8d8d0', label: 'White' },
-    { value: '#00ff00d0', label: 'Green' },
-];
+import i18n from '../i18n';
+import { colors } from '../constants/colors';
+// const colors = [
+//     { value: '', label: 'Select a team color.' },
+//     { value: '#ff0000d0', label: 'Red' },
+//     { value: '#0000ffd0', label: 'Blue' },
+//     { value: '#ffd700d0', label: 'Yellow' },
+//     { value: '#d8d8d8d0', label: 'White' },
+//     { value: '#00ff00d0', label: 'Green' },
+// ];
 
 const TeamEditForm = ({
     teamName,
@@ -78,12 +80,12 @@ const TeamEditForm = ({
     return (
         <View style={{ flex: 1 }}>
             <View>
-                <Text>Name</Text>
+                <Text>{i18n.t('edit.form.name')}</Text>
                 <StyledDefaultTextInput
                     onChangeText={onChangeName}
                     value={name}
                     maxLength={50}
-                    placeholder="Input a team name."
+                    placeholder={i18n.t('edit.form.namePlaceholder')}
                     returnKeyType="next"
                 />
                 {!!teamNameError && (
@@ -93,7 +95,7 @@ const TeamEditForm = ({
             <View style={{ height: 6 }} />
 
             <View>
-                <Text>Color</Text>
+                <Text>{i18n.t('edit.form.color')}</Text>
                 <View>
                     {!showColorPicker && (
                         <TouchableOpacity
@@ -104,17 +106,22 @@ const TeamEditForm = ({
                                 backgroundColor: color,
                             }}
                             onPress={onPressShowColorPicker}>
-                            <Text>{colorLabel || "Select a team's color"}</Text>
+                            <Text>
+                                {colorLabel ||
+                                    i18n.t('edit.form.colorPlaceholder')}
+                            </Text>
                         </TouchableOpacity>
                     )}
 
                     {showColorPicker && (
                         <View>
                             <View>
-                                <Text>Select color.</Text>
+                                <Text>
+                                    {i18n.t('edit.form.colorPlaceholder')}
+                                </Text>
                                 <Button
                                     onPress={onPressCancelPickerColor}
-                                    title="Cancel"
+                                    title={i18n.t('edit.form.cancel')}
                                 />
                             </View>
                             <Picker

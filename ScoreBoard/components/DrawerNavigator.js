@@ -9,21 +9,22 @@ import {
 import MainViewNavigator from './MainViewNavigator';
 import InfoViewNavigator from './InfoViewNavigator';
 import { IMAGE_BACKGROUND_COLOR } from '../constants/colors';
+import i18n from '../i18n';
 
 const DrawerNavigator = createDrawerNavigator(
     {
         Main: {
             screen: MainViewNavigator,
             navigationOptions: {
-                drawerLabel: 'Games',
-                title: 'Games',
+                drawerLabel: i18n.t('navigation.main'),
+                title: i18n.t('main.title'),
             },
         },
         Info: {
             screen: InfoViewNavigator,
             navigationOptions: {
-                drawerLabel: 'Info',
-                title: 'Info',
+                drawerLabel: i18n.t('navigation.info'),
+                title: i18n.t('info.title'),
             },
         },
     },

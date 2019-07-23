@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -11,19 +11,28 @@ import {
 } from 'react-native';
 import { StyledSafeAreaView, StyledTitleText } from '../components/Styled';
 import { IMAGE_BACKGROUND_COLOR } from '../constants/colors';
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-});
+import i18n from '../i18n';
+import * as RNLocalize from 'react-native-localize';
 
 const InfoView = () => {
+    useEffect(() => {
+        // RNLocalize.addEventListener('change', () => {
+        //     // do localization related stuff…
+        //     const locales = RNLocalize.getLocales();
+        //     if (locales.length > 0) {
+        //         const { languageCode } = locales[0];
+        //         i18n.locale = languageCode;
+        //     } else {
+        //         i18n.locale = 'en';
+        //     }
+        // });
+    }, []);
     return (
         <StyledSafeAreaView>
             <View>
                 <View
                     style={{
-                        padding: 6,
+                        padding: 24,
                         backgroundColor: IMAGE_BACKGROUND_COLOR,
                     }}>
                     <Image
@@ -33,19 +42,15 @@ const InfoView = () => {
                 </View>
                 <View style={{ height: 6 }} />
                 <View style={{ padding: 12 }}>
-                    <StyledTitleText>너와 나의 점수판</StyledTitleText>
+                    <StyledTitleText>
+                        {i18n.t('info.content.title')}
+                    </StyledTitleText>
                     <View style={{ height: 6 }} />
-                    <Text>
-                        이 응용프로그램으로 경기 점수를 어디에서나 편리하게
-                        기록하세요.
-                    </Text>
+                    <Text>{i18n.t('info.content.message1')}</Text>
                     <View style={{ height: 3 }} />
-                    <Text>
-                        유용하게 사용하시고, 이 응용프로그램이 마음에 드시면
-                        저에게 커피 한잔을 보내실 수 있습니다.
-                    </Text>
+                    <Text>{i18n.t('info.content.message2')}</Text>
                     <View style={{ height: 24 }} />
-                    <Button title="커피 한잔 보내기 (금액 표시)" />
+                    <Button title={i18n.t('info.content.sendACupOfCofee')} />
                 </View>
             </View>
         </StyledSafeAreaView>
@@ -53,7 +58,8 @@ const InfoView = () => {
 };
 
 InfoView.navigationOptions = {
-    drawerLabel: 'Info',
+    drawerLabel: i18n.t('navigation.info'),
+    title: i18n.t('info.title'),
 };
 
 export default InfoView;

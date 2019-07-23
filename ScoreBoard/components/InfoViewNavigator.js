@@ -13,7 +13,7 @@ const InfoViewNavigator = createStackNavigator({
         screen: InfoView,
         navigationOptions: ({ navigation }) => {
             return {
-                title: 'Info',
+                // title: 'Info',
                 headerLeft: (
                     <NavigationDrawerStructure navigation={navigation} />
                 ),

@@ -30,6 +30,7 @@ import {
     HEADER_BACKGROUND_COLOR,
     HEADER_TINT_COLOR,
 } from '../constants/colors';
+import i18n from '../i18n';
 
 const EditFormValidator = () => {
     const getValidState = () => {
@@ -40,35 +41,56 @@ const EditFormValidator = () => {
     };
 
     return {
-        validateTitle: data => {
+        validateTitle(data) {
             const { title } = data;
             if (!title || title.trim().length === 0) {
                 return {
                     valid: false,
-                    message: 'Please input a title of game.',
+                    message: i18n.t(
+                        'edit.form.titleError',
+                    ) /*'Please input a title of game.'*/,
                 };
             }
             return getValidState();
         },
-        validateTeamAName: data => {
+        validateTeamAName(data) {
             const { teamAName } = data;
             if (!teamAName || teamAName.trim().length === 0) {
                 return {
                     valid: false,
-                    message: 'Please input a name of team A',
+                    message: i18n.t(
+                        'edit.form.nameError',
+                    ) /*'Please input a name of team A'*/,
                 };
             }
             return getValidState();
         },
-        validateTeamBName: data => {
+        validateTeamBName(data) {
             const { teamBName } = data;
             if (!teamBName || teamBName.trim().length === 0) {
                 return {
                     valid: false,
-                    message: 'Please input a name of team B',
+                    message: i18n.t(
+                        'edit.form.nameError',
+                    ) /* 'Please input a name of team B'*/,
                 };
             }
             return getValidState();
+        },
+        validate(formData) {
+            const results = [];
+            let valid = true;
+            const messages = [];
+            results.push(this.validateTitle(formData));
+            results.push(this.validateTeamAName(formData));
+            results.push(this.validateTeamBName(formData));
+
+            results.forEach(v => {
+                valid &= v.valid;
+                messages.push(v.message);
+            });
+
+            return { valid, messages };
         },
     };
 };
@@ -167,10 +189,18 @@ const EditGameView = ({ navigation }) => {
         saveData.teamBColor = teamBColor;
         saveData.isClosed = isClosed;
 
-        dispatch({
-            type: SAVE_GAME_CALL,
-            data: saveData,
-        });
+        const { valid, messages } = validator.validate(saveData);
+
+        setTitleError(messages[0]);
+        setTeamANameError(messages[1]);
+        setTeamBNameError(messages[2]);
+
+        if (valid) {
+            dispatch({
+                type: SAVE_GAME_CALL,
+                data: saveData,
+            });
+        }
     }, [
         game,
         game && game.id,
@@ -188,12 +218,14 @@ const EditGameView = ({ navigation }) => {
                 <View style={{ padding: 15 }}>
                     <View>
                         <View>
-                            <Text>Title</Text>
+                            <Text>{i18n.t('edit.form.title')}</Text>
                             <StyledDefaultTextInput
                                 onChangeText={onChangeTitle}
                                 value={title}
                                 maxLength={50}
-                                placeholder="Input a game title."
+                                placeholder={i18n.t(
+                                    'edit.form.titlePlaceholder',
+                                )}
                                 returnKeyType="next"
                             />
                         </View>
@@ -205,7 +237,7 @@ const EditGameView = ({ navigation }) => {
                     </View>
 
                     <View style={{ height: 15 }} />
-                    <Text>Team A</Text>
+                    <Text>{i18n.t('edit.form.teamA')}</Text>
                     <TeamEditForm
                         teamName={teamAName}
                         teamNameError={teamANameError}
@@ -214,7 +246,7 @@ const EditGameView = ({ navigation }) => {
                         onChangeTeamColor={onChangeTeamAColor}
                     />
                     <View style={{ height: 6 }} />
-                    <Text>Team B</Text>
+                    <Text>{i18n.t('edit.form.teamA')}</Text>
                     <TeamEditForm
                         teamName={teamBName}
                         teamNameError={teamBNameError}
@@ -225,7 +257,9 @@ const EditGameView = ({ navigation }) => {
                     <View style={{ height: 15 }} />
                     <View
                         style={{ flexDirection: 'row', alignItems: 'stretch' }}>
-                        <Text style={{ flex: 1 }}>Game is closed</Text>
+                        <Text style={{ flex: 1 }}>
+                            {i18n.t('edit.form.isClosed')}
+                        </Text>
                         <View
                             style={{
                                 flex: 1,
@@ -241,7 +275,7 @@ const EditGameView = ({ navigation }) => {
                     <View style={{ justifyContent: 'flex-end' }}>
                         <Button
                             onPress={onPressSave}
-                            title="Save"
+                            title={i18n.t('edit.form.save')}
                             type="solid"
                         />
                     </View>
@@ -253,20 +287,12 @@ const EditGameView = ({ navigation }) => {
 
 EditGameView.navigationOptions = ({ navigation }) => {
     return {
-        drawerLabel: 'Edit',
-        title: 'Edit',
+        drawerLabel: i18n.t('edit.title'),
+        title: i18n.t('edit.title'),
         headerStyle: {
             backgroundColor: HEADER_BACKGROUND_COLOR,
         },
         headerTintColor: HEADER_TINT_COLOR,
-        // headerRight: (
-        //     <TouchableOpacity
-        //         onPress={() => {
-        //             navigation.goBack();
-        //         }}>
-        //         <Text style={{ marginRight: 5 }}>Save</Text>
-        //     </TouchableOpacity>
-        // ),
     };
 };
 

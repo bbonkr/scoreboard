@@ -9,12 +9,14 @@ import {
     HEADER_BACKGROUND_COLOR,
     HEADER_TINT_COLOR,
 } from '../constants/colors';
+import i18n from '../i18n';
+
 const MainViewNavigator = createStackNavigator({
     Main: {
         screen: MainView,
         navigationOptions: ({ navigation }) => {
             return {
-                title: 'Games',
+                // title: i18n.t('main.title'),
                 headerLeft: (
                     <NavigationDrawerStructure navigation={navigation} />
                 ),

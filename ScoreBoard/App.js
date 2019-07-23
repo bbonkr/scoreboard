@@ -25,7 +25,8 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import { ThemeProvider } from 'react-native-elements';
-
+import * as RNLocalize from 'react-native-localize';
+import i18n from './i18n';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import RootStack from './components/RootStack';
 import DrawerNavigator from './components/DrawerNavigator';
@@ -39,6 +40,20 @@ const store = configureStore();
 
 const App = () => {
     const [splash, setSplash] = useState(true);
+
+    useEffect(() => {
+        RNLocalize.addEventListener('change', () => {
+            // do localization related stuff…
+            const locales = RNLocalize.getLocales();
+            if (locales.length > 0) {
+                const { languageCode } = locales[0];
+                i18n.locale = languageCode;
+            } else {
+                i18n.locale = 'en';
+            }
+        });
+    }, []);
+
     let timeout;
     // useEffect(() => {
     //     timeout = setTimeout(() => {

@@ -12,9 +12,10 @@ import {
     Alert,
     ActivityIndicator,
     Button,
+    BackHandler,
 } from 'react-native';
 import { useSelector, useDispatch, useStore } from 'react-redux';
-// import { Button } from 'react-native-elements';
+import * as RNLocalize from 'react-native-localize';
 import Swipeout from 'react-native-swipeout';
 import {
     LOAD_GAMES_CALL,
@@ -23,8 +24,9 @@ import {
     DELETE_GAME_CALL,
 } from '../actions/game';
 import TeamCard from '../components/TeamCard';
-import { StyledTitleText } from '../components/Styled';
+import { StyledSafeAreaView, StyledTitleText } from '../components/Styled';
 import { HEADER_TINT_COLOR } from '../constants/colors';
+import i18n from '../i18n';
 
 const PAGE_SIZE = 10;
 
@@ -48,6 +50,30 @@ const MainView = ({ navigation }) => {
     });
 
     useEffect(() => {
+        // const locales = RNLocalize.getLocales();
+        // console.warn('locales: ', locales);
+
+        // RNLocalize.addEventListener('change', () => {
+        //     // do localization related stuff…
+        //     const locales = RNLocalize.getLocales();
+        //     if (locales.length > 0) {
+        //         const { languageCode } = locales[0];
+        //         i18n.locale = languageCode;
+        //     } else {
+        //         i18n.locale = 'en';
+        //     }
+        // });
+
+        BackHandler.addEventListener('hardwareBackPress', function() {
+            // this.onMainScreen and this.goBack are just examples, you need to use your own implementation here
+            // Typically you would use the navigator here to go to the last state.
+
+            if (!this.onMainScreen()) {
+                this.goBack();
+                return true;
+            }
+            return false;
+        });
         dispatch({
             type: LOAD_GAMES_CALL,
             data: {
@@ -109,13 +135,17 @@ const MainView = ({ navigation }) => {
         item => () => {
             setRowId(item.id);
             Alert.alert(
-                'Delete a game',
-                'Do you want to this game',
+                i18n.t('main.confirmDelete.title'),
+                i18n.t('main.confirmDelete.message'),
                 [
-                    { text: 'Cancel', style: 'cancel', onPress: () => {} },
                     {
-                        text: 'Delete',
-                        style: '',
+                        text: i18n.t('main.confirmDelete.buttons.no'),
+                        style: 'cancel',
+                        onPress: () => {},
+                    },
+                    {
+                        text: i18n.t('main.confirmDelete.buttons.yes'),
+                        style: 'delete',
                         onPress: () => {
                             dispatch({
                                 type: DELETE_GAME_CALL,
@@ -142,7 +172,7 @@ const MainView = ({ navigation }) => {
     );
 
     return (
-        <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
+        <StyledSafeAreaView style={{ justifyContent: 'center' }}>
             <View style={{ flex: 1 }}>
                 <FlatList
                     useFlatList={true}
@@ -150,14 +180,14 @@ const MainView = ({ navigation }) => {
                     renderItem={({ item }) => {
                         let swipeoutButtons = [
                             {
-                                text: 'Delete',
+                                text: i18n.t('main.delete') /*'Delete'*/,
                                 type: 'delete',
                                 backgroundColor: 'red',
                                 underlayColor: 'rgba(0,0,0,0.6)',
                                 onPress: onPressDelete(item),
                             },
                             {
-                                text: 'Edit',
+                                text: i18n.t('main.edit') /*'Edit'*/,
                                 type: 'default',
                                 backgroundColor: 'green',
                                 underlayColor: 'rgba(0,0,0,0.6)',
@@ -235,7 +265,7 @@ const MainView = ({ navigation }) => {
                         gamesHasMore && (
                             <View>
                                 <Button
-                                    title="Load more"
+                                    title={i18n.t('main.loadMore')}
                                     onPress={onPressLoadMore}
                                 />
                             </View>
@@ -246,21 +276,21 @@ const MainView = ({ navigation }) => {
                     onRefresh={onRefleshList}
                 />
             </View>
-        </SafeAreaView>
+        </StyledSafeAreaView>
     );
 };
 
 MainView.navigationOptions = ({ navigation }) => {
     return {
-        drawerLabel: 'Games',
-        title: 'Games',
+        drawerLabel: i18n.t('navigation.main'),
+        title: i18n.t('main.title'),
         headerRight: (
             <Text
                 style={{ marginRight: 5, color: HEADER_TINT_COLOR }}
                 onPress={() => {
                     navigation.navigate('Edit', { id: null });
                 }}>
-                Add
+                {i18n.t('main.add')}
             </Text>
         ),
     };
