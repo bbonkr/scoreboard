@@ -1,5 +1,6 @@
 {
     "appName": "Score Board",
+    "appDisplayName": "Score Board",
     "navigation": {
         "main": "Games",
         "info": "About"
@@ -48,6 +49,11 @@
             "save": "Save",
             "cancel": "Cancel"
         }
+    },
+    "game": {
+        "title": "Game",
+        "open": "Open",
+        "close": "Close"
     },
     "constants": {
         "colors": {

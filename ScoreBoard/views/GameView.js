@@ -21,6 +21,7 @@ import {
     HEADER_BACKGROUND_COLOR,
     HEADER_TINT_COLOR,
 } from '../constants/colors';
+import i18n from '../i18n';
 
 const GameView = ({ navigation }) => {
     const dispatch = useDispatch();
@@ -154,9 +155,9 @@ const GameCloseButton = ({ navigation }) => {
     const [actionText, setActionText] = useState('');
 
     useEffect(() => {
-        let text = 'Close';
+        let text = i18n.t('game.close');
         if (!!game) {
-            text = game.isClosed ? 'Open' : 'Close';
+            text = game.isClosed ? i18n.t('game.open') : i18n.t('game.close');
         }
         setActionText(text);
     }, [game && game.isClosed]);

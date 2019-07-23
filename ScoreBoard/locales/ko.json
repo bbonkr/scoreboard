@@ -1,5 +1,6 @@
 {
     "appName": "너와 나의 점수판",
+    "appDisplayName": "너와 나의 점수판",
     "navigation": {
         "main": "경기 목록",
         "info": "정보"
@@ -45,6 +46,11 @@
             "save": "저장",
             "cancel": "취소"
         }
+    },
+    "game": {
+        "title": "경기",
+        "open": "진행중",
+        "close": "종료"
     },
     "constants": {
         "colors": {

@@ -11,6 +11,12 @@ import InfoViewNavigator from './InfoViewNavigator';
 import { IMAGE_BACKGROUND_COLOR } from '../constants/colors';
 import i18n from '../i18n';
 
+/**
+ * 메뉴 컴포넌트
+ * 서랍장 메뉴
+ *    - 경기
+ *    - 정보
+ */
 const DrawerNavigator = createDrawerNavigator(
     {
         Main: {

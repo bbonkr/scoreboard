@@ -12,6 +12,7 @@ const NavigationDrawerStructure = ({ navigation }) => {
                 <Image
                     source={require('../images/menu.png')}
                     style={{ width: 25, height: 25, marginLeft: 5 }}
+                    accessibilityLabel="menu"
                 />
             </TouchableOpacity>
         </View>
